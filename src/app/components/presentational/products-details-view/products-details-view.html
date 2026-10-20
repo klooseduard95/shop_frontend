@@ -1,0 +1,11 @@
+@if (product) {
+  <div class="product-details">
+    <img [src]="product.imageUrl" alt="{{ product.name }}">
+    <h2>{{ product.name }}</h2>
+    <p>{{ product.description }}</p>
+    <p class="product-price">{{ product.price }} EUR</p>
+    <button (click)="onAddToCart()">Add to Cart</button>
+  </div>
+} @else {
+  <p>Select a product to see its details.</p>
+}
