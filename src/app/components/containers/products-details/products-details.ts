@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Product } from '../../../types/products.types';
 import { ProductsDetailsView } from '../../presentational/products-details-view/products-details-view';
 
@@ -9,9 +9,9 @@ import { ProductsDetailsView } from '../../presentational/products-details-view/
   templateUrl: './products-details.html',
 })
 export class ProductsDetails {
-  selectedProduct: Product | null = null;
+  @Input() product: Product | null = null;
 
   handleAddToCart(product: Product): void {
-    console.log('Product added to cart', product.name);
+    console.log('Product added to cart', product);
   }
 }

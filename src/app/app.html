@@ -1,13 +1,13 @@
-<main>
+<main style="padding: 2rem; font-family: sans-serif;">
   <h1>My Online Shop</h1>
 
-  <section>
+  <section style="margin-bottom: 3rem;">
     <h2>Products catalog</h2>
-    <app-products-list></app-products-list>
+    <app-products-list (productSelected)="onProductSelected($event)"></app-products-list>
   </section>
 
   <section>
     <h2>Product details</h2>
-    <app-products-details></app-products-details>
+    <app-products-details [product]="selectedProduct()"></app-products-details>
   </section>
 </main>
