@@ -1,0 +1,135 @@
+.detail-card {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 2.5rem;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  padding: 2.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.image-wrapper {
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f8fafc;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.content-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.category-tag {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
+}
+
+.product-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0.5rem 0 1rem;
+}
+
+.price-tag {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2563eb;
+  margin-bottom: 2rem;
+}
+
+.description-section {
+  margin-bottom: 2.5rem;
+  flex-grow: 1;
+
+  h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 0.5rem;
+  }
+
+  p {
+    color: #475569;
+    line-height: 1.5;
+    margin: 0;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+
+  button {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+  }
+
+  .btn-primary {
+    background-color: #2563eb;
+    color: white;
+
+    &:hover {
+      background-color: #1d4ed8;
+      box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+    }
+  }
+
+  .btn-secondary {
+    background-color: #f1f5f9;
+    color: #475569;
+
+    &:hover {
+      background-color: #e2e8f0;
+      color: #0f172a;
+    }
+  }
+}
+
+.placeholder-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem;
+  background: #f8fafc;
+  border: 2px dashed #cbd5e1;
+  border-radius: 16px;
+  color: #94a3b8;
+  text-align: center;
+
+  svg {
+    margin-bottom: 1rem;
+    opacity: 0.5;
+  }
+
+  p {
+    font-size: 1.125rem;
+    font-weight: 500;
+    margin: 0;
+  }
+}
+
+

@@ -1,11 +1,30 @@
 @if (product) {
-  <div class="product-details">
-    <img [src]="product.imageUrl" alt="{{ product.name }}">
-    <h2>{{ product.name }}</h2>
-    <p>{{ product.description }}</p>
-    <p class="product-price">{{ product.price }} EUR</p>
-    <button (click)="onAddToCart()">Add to Cart</button>
-  </div>
+  <article class="detail-card">
+    <div class="image-wrapper">
+      <img [src]="product.imageUrl" [alt]="product.name">
+    </div>
+
+    <div class="content-wrapper">
+      <header class="detail-header">
+        <span class="detail-category">{{ product.category }}</span>
+        <h2 class="product-title">{{ product.name }}</h2>
+        <div class="price-tag">{{ product.price }} EUR</div>
+      </header>
+
+      <div class="description-section">
+        <h3>Description</h3>
+        <p>{{ product.description }}</p>
+      </div>
+
+      <div class="actions">
+        <button class="btn-primary" (click)="onAddToCart()">Add to Cart</button>
+        <button class="btn-secondary">Edit</button>
+      </div>
+    </div>
+  </article>
 } @else {
-  <p>Select a product to see its details.</p>
+  <div class="placeholder-state">
+    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="m2 2 20 20"/><path d="M7.12 7.12 3 11l9 9 7.88-7.88"/><path d="M10.5 10.5 14 14"/><path d="m16 8 3-3"/><path d="m9 15-3 3"/></svg>
+    <p>Select a product from the list to view details.</p>
+  </div>
 }
