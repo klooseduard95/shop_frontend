@@ -1,0 +1,13 @@
+<div class="products-grid">
+  @for(product of products; track product.id) {
+    <div class="product-card" (click)="onSelectProduct(product)">
+      <img [src]="product.imageUrl" alt="{{ product.name }}" class="product-image">
+      <h3>{{ product.name }}</h3>
+      <p>{{ product.description }}</p>
+      <p class="product-price">{{ product.price }} EUR</p>
+    </div>
+  } @empty {
+    <p>No products available.</p>
+  }
+
+</div>
