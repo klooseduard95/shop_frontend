@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CartItem } from '../../../../shared/types/cart.types';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-shopping-cart-details-view',
-  standalone: false,
+  imports: [CommonModule],
   styleUrl: './shopping-cart-details-view.css',
   templateUrl: './shopping-cart-details-view.html'
 })

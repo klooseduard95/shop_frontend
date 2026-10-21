@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { CartItem } from '../../../../shared/types/cart.types';
+import { ShoppingCartDetailsView } from '../../presentational/shopping-cart-details-view/shopping-cart-details-view';
 
 @Component({
   selector: 'app-shopping-cart-details',
-  standalone: false,
+  imports: [ShoppingCartDetailsView],
   styleUrl: './shopping-cart-details.css',
   templateUrl: './shopping-cart-details.html',
 })
