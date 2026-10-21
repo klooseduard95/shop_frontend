@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { ProductsListView } from '../../presentational/products-list-view/products-list-view';
-import { Product } from '../../../types/products.types';
+import { Product } from '../../../features/shared/types/products.types';
 import { MOCK_PRODUCTS } from '../../../mocks/products.mock';
 
 @Component({
