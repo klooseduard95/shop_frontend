@@ -1,15 +1,16 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { Product } from '../../../features/shared/types/products.types';
 import { ProductsDetailsView } from '../../presentational/products-details-view/products-details-view';
 
 @Component({
-  imports: [ProductsDetailsView],
   selector: 'app-products-details',
+  imports: [ProductsDetailsView],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './products-details.scss',
   templateUrl: './products-details.html',
 })
 export class ProductsDetails {
-  @Input() product: Product | null = null;
+  product = input<Product | null>(null);
 
   handleAddToCart(product: Product): void {
     console.log('Product added to cart', product);

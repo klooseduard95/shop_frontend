@@ -1,7 +1,7 @@
-<main style="padding: 2rem; font-family: sans-serif;">
+<main>
   <h1>My Online Shop</h1>
 
-  <section style="margin-bottom: 3rem;">
+  <section class="mb-3">
     <h2>Products catalog</h2>
     <app-products-list (productSelected)="onProductSelected($event)"></app-products-list>
   </section>
@@ -11,7 +11,7 @@
     <app-products-details [product]="selectedProduct()"></app-products-details>
   </section>
 
-  <section style="margin-top: 3rem;">
+  <section class="mt-3">
     <app-shopping-cart-details></app-shopping-cart-details>
   </section>
 </main>

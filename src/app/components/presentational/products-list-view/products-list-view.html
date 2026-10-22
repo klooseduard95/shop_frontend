@@ -7,8 +7,8 @@
   </div>
 
   <div class="list-body">
-    @for(product of products; track product.id) {
-      <div class="list-row" (click)="onSelectProduct(product)">
+    @for(product of products(); track product.id) {
+      <div class="list-row" (click)="productSelected.emit(product)">
         <span class="col-category">{{ product.category }}</span>
         <span class="col-name">{{ product.name }}</span>
         <span class="col-price">{{ product.price }} EUR</span>

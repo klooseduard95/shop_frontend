@@ -13,7 +13,7 @@
       <span class="col-action"></span>
     </div>
 
-    @for (item of cartItems; track item.product.id) {
+    @for (item of cartItems(); track item.product.id) {
       <div class="cart-row">
         <span class="col-category">{{ item.product.category }}</span>
         <span class="col-product">{{ item.product.name }}</span>

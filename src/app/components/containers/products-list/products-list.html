@@ -1,4 +1,4 @@
 <app-products-list-view
-  [products]="products"
-  (productSelected)="handleProductSelection($event)">
+  [products]="products()"
+  (productSelected)="productSelected.emit($event)">
 </app-products-list-view>

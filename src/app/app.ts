@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ProductsList } from './components/containers/products-list/products-list';
 import { ProductsDetails } from './components/containers/products-details/products-details';
@@ -8,8 +8,9 @@ import {
 } from './features/shopping-cart/components/containers/shopping-cart-details/shopping-cart-details';
 
 @Component({
-  imports: [RouterOutlet, ProductsList, ProductsDetails, ShoppingCartDetails],
   selector: 'app-root',
+  imports: [RouterOutlet, ProductsList, ProductsDetails, ShoppingCartDetails],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './app.scss',
   templateUrl: './app.html',
 })

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, input, Input, output, Output } from '@angular/core';
 import { Product } from '../../../features/shared/types/products.types';
 
 @Component({
@@ -7,12 +7,6 @@ import { Product } from '../../../features/shared/types/products.types';
   templateUrl: './products-details-view.html',
 })
 export class ProductsDetailsView {
-  @Input() product: Product | null = null;
-  @Output() addToCart = new EventEmitter<Product>();
-
-  onAddToCart(): void {
-    if (this.product) {
-      this.addToCart.emit(this.product);
-    }
-  }
+  product = input<Product | null>(null);
+  addToCart = output<Product>();
 }
