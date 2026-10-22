@@ -1,24 +1,16 @@
 import { Component } from '@angular/core';
 import { CartItem } from '../../../../shared/types/cart.types';
 import { ShoppingCartDetailsView } from '../../presentational/shopping-cart-details-view/shopping-cart-details-view';
+import { MOCK_CART_ITEMS } from '../../../../../mocks/cart.mock';
 
 @Component({
   selector: 'app-shopping-cart-details',
   imports: [ShoppingCartDetailsView],
-  styleUrl: './shopping-cart-details.css',
+  styleUrl: './shopping-cart-details.scss',
   templateUrl: './shopping-cart-details.html',
 })
 export class ShoppingCartDetails {
-  mockCartItems: CartItem[] = [
-    {
-      product: { id: 1, name: 'Wireless Headphones', category: 'Electronics', description: '', price: 150, imageUrl: '' },
-      quantity: 1
-    },
-    {
-      product: { id: 2, name: 'Mechanical Keyboard', category: 'Peripherals', description: '', price: 100, imageUrl: '' },
-      quantity: 2
-    }
-  ];
+  mockCartItems: CartItem[] = [...MOCK_CART_ITEMS];
 
   handleRemoveItem(productId: number): void {
     this.mockCartItems = this.mockCartItems.filter(item => item.product.id !== productId);

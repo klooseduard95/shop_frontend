@@ -3,7 +3,7 @@ import { Product } from '../../../features/shared/types/products.types';
 
 @Component({
   selector: 'app-products-details-view',
-  styleUrl: './products-details-view.css',
+  styleUrl: './products-details-view.scss',
   templateUrl: './products-details-view.html',
 })
 export class ProductsDetailsView {

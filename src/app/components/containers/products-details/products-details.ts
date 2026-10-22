@@ -5,7 +5,7 @@ import { ProductsDetailsView } from '../../presentational/products-details-view/
 @Component({
   imports: [ProductsDetailsView],
   selector: 'app-products-details',
-  styleUrl: './products-details.css',
+  styleUrl: './products-details.scss',
   templateUrl: './products-details.html',
 })
 export class ProductsDetails {

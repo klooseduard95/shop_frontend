@@ -6,7 +6,7 @@ import { MOCK_PRODUCTS } from '../../../mocks/products.mock';
 @Component({
   imports: [ProductsListView],
   selector: 'app-products-list',
-  styleUrl: './products-list.css',
+  styleUrl: './products-list.scss',
   templateUrl: './products-list.html',
 })
 export class ProductsList {

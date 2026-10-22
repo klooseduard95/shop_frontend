@@ -4,7 +4,7 @@ import { Product } from '../../../features/shared/types/products.types';
 @Component({
   imports: [],
   selector: 'app-products-list-view',
-  styleUrl: './products-list-view.css',
+  styleUrl: './products-list-view.scss',
   templateUrl: './products-list-view.html',
 })
 export class ProductsListView {
