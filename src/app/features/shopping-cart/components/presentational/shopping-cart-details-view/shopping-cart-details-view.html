@@ -1,0 +1,30 @@
+<div class="cart-container">
+  <header class="cart-header-main">
+    <h2 class="cart-header-title">Shopping Cart</h2>
+    <button class="btn-checkout" (click)="checkout.emit()">CHECKOUT</button>
+  </header>
+
+  <div class="cart-table">
+    <div class="cart-row header">
+      <span class="col-category">Category</span>
+      <span class="col-product">Product</span>
+      <span class="col-price">Price</span>
+      <span class="col-quantity">Quantity</span>
+      <span class="col-action"></span>
+    </div>
+
+    @for (item of cartItems; track item.product.id) {
+      <div class="cart-row">
+        <span class="col-category">{{ item.product.category }}</span>
+        <span class="col-product">{{ item.product.name }}</span>
+        <span class="col-price">{{ item.product.price }} EUR</span>
+        <span class="col-quantity">{{ item.quantity }}</span>
+        <span class="col-action">
+          <button class="btn-remove" (click)="removeItem.emit(item.product.id)">X</button>
+        </span>
+      </div>
+    } @empty {
+      <div class="empty-cart">Your shopping cart is empty.</div>
+    }
+  </div>
+</div>
