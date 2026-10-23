@@ -1,7 +1,6 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { CartItem } from '../../../../shared/types/cart.types';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ShoppingCartDetailsView } from '../../presentational/shopping-cart-details-view/shopping-cart-details-view';
-import { MOCK_CART_ITEMS } from '../../../../../mocks/cart.mock';
+import { CartService } from '../../../../shared/services/cart.service';
 
 @Component({
   selector: 'app-shopping-cart-details',
@@ -11,13 +10,5 @@ import { MOCK_CART_ITEMS } from '../../../../../mocks/cart.mock';
   templateUrl: './shopping-cart-details.html',
 })
 export class ShoppingCartDetails {
-  mockCartItems = signal<CartItem[]>([...MOCK_CART_ITEMS]);
-
-  handleRemoveItem(productId: number): void {
-    this.mockCartItems.update(items => items.filter(item => item.product.id !== productId));
-  }
-
-  handleCheckout(): void {
-    console.log('Proceeding to checkout with items:', this.mockCartItems());
-  }
+  cartService = inject(CartService);
 }

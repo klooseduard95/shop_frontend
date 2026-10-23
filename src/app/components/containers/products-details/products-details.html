@@ -1,4 +1,5 @@
 <app-products-details-view
-  [product]="product()"
-  (addToCart)="handleAddToCart($event)">
+  [product]="product() ?? null"
+  (addToCart)="handleAddToCart($event)"
+  (deleteProduct)="handleDelete($event)">
 </app-products-details-view>

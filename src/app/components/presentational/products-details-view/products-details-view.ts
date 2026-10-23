@@ -1,4 +1,4 @@
-import { Component, EventEmitter, input, Input, output, Output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { Product } from '../../../features/shared/types/products.types';
 
 @Component({
@@ -9,4 +9,5 @@ import { Product } from '../../../features/shared/types/products.types';
 export class ProductsDetailsView {
   product = input<Product | null>(null);
   addToCart = output<Product>();
+  deleteProduct = output<string>();
 }

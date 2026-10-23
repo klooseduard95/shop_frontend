@@ -1,8 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
-import { Product } from '../../../features/shared/types/products.types';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ProductsDetailsView } from '../../presentational/products-details-view/products-details-view';
-import { ActivatedRoute } from '@angular/router';
-import { MOCK_PRODUCTS } from '../../../mocks/products.mock';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ProductsService } from '../../../services/products.service';
+import { filter, map, switchMap } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { CartService } from '../../../features/shared/services/cart.service';
+import { Product } from '../../../features/shared/types/products.types';
 
 @Component({
   selector: 'app-products-details',
@@ -11,24 +14,33 @@ import { MOCK_PRODUCTS } from '../../../mocks/products.mock';
   styleUrl: './products-details.scss',
   templateUrl: './products-details.html',
 })
-export class ProductsDetails implements OnInit {
+export class ProductsDetails {
   private readonly route = inject(ActivatedRoute);
-  product = signal<Product | null>(null);
+  private readonly router = inject(Router);
+  private readonly productService = inject(ProductsService);
+  cartService = inject(CartService);
 
-  ngOnInit() {
-    const idParam = this.route.snapshot.paramMap.get('id');
+  private readonly id$ = this.route.paramMap.pipe(
+    map((params) => params.get('id')),
+    filter((id): id is string => !!id),
+  );
 
-    if (idParam) {
-      const productId = Number(idParam);
-      const foundProduct = MOCK_PRODUCTS.find((p) => p.id === productId);
-
-      if (foundProduct) {
-        this.product.set(foundProduct);
-      }
-    }
-  }
+  product = toSignal(this.id$.pipe(switchMap((id) => this.productService.getProductById(id))));
 
   handleAddToCart(product: Product): void {
-    console.log('Product added to cart', product);
+    this.cartService.addToCart(product);
+    console.log(`Product ${product.name} added to cart. Total: ${this.cartService.cartTotal()}`);
+  }
+
+  handleDelete(id: string): void {
+    if (confirm('Are you sure you want to delete this product?')) {
+      this.productService.deleteProduct(id).subscribe({
+        next: async () => {
+          console.log('Product deleted');
+          await this.router.navigate(['/products']);
+        },
+        error: (err) => console.error('Failed to delete product', err),
+      });
+    }
   }
 }

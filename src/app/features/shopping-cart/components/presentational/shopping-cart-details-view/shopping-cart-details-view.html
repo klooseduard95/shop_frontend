@@ -15,7 +15,7 @@
 
     @for (item of cartItems(); track item.product.id) {
       <div class="cart-row">
-        <span class="col-category">{{ item.product.category }}</span>
+        <span class="col-category">{{ item.product.categoryName }}</span>
         <span class="col-product">{{ item.product.name }}</span>
         <span class="col-price">{{ item.product.price }} EUR</span>
         <span class="col-quantity">{{ item.quantity }}</span>
@@ -25,6 +25,13 @@
       </div>
     } @empty {
       <div class="empty-cart">Your shopping cart is empty.</div>
+    }
+
+    @if (cartItems().length > 0) {
+      <div class="cart-row" style="justify-content: flex-end; font-weight: bold; font-size: 1.25rem;">
+        <span style="margin-right: 2rem;">Total:</span>
+        <span style="color: #2563eb;">{{ totalPrice() }} RON</span>
+      </div>
     }
   </div>
 </div>

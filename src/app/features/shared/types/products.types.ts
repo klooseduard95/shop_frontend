@@ -1,8 +1,18 @@
 export interface Product {
-  id: number;
+  id: string;
   name: string;
-  category: string;
-  description: string;
   price: number;
-  imageUrl: string;
+  weight: number;
+  categoryId: string;
+  categoryName: string;
+  categoryDescription: string;
+  imageUrl?: string;
+}
+
+export interface SpringPage<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
 }

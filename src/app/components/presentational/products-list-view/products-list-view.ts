@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { Product } from '../../../features/shared/types/products.types';
 import { RouterLink } from '@angular/router';
 
@@ -11,4 +11,5 @@ import { RouterLink } from '@angular/router';
 })
 export class ProductsListView {
   products = input<Product[]>([]);
+  deleteProduct = output<string>();
 }
