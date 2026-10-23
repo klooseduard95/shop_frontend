@@ -8,12 +8,14 @@
 
   <div class="list-body">
     @for(product of products(); track product.id) {
-      <div class="list-row" (click)="productSelected.emit(product)">
-        <span class="col-category">{{ product.category }}</span>
-        <span class="col-name">{{ product.name }}</span>
+      <div class="list-row">
+        <span class="col-category">
+          <span class="badge">{{ product.category }}</span>
+        </span>
+        <span class="col-name fw-medium">{{ product.name }}</span>
         <span class="col-price">{{ product.price }} EUR</span>
-        <span class="col-action icon-arrow">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        <span class="col-action">
+          <button [routerLink]="['/products', product.id]" style="padding: 0.5rem 1rem; cursor: pointer; border-radius: 6px; border: 1px solid #e2e8f0; background: #fff;">View</button>
         </span>
       </div>
     } @empty {

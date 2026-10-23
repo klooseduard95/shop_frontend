@@ -1,17 +1,11 @@
-<main>
-  <h1>My Online Shop</h1>
+<main style="padding: 2rem; font-family: sans-serif;">
+  <header>
+    <h1>My Online Shop</h1>
+    <nav style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 1rem;">
+      <a routerLink="/products" style="text-decoration: none; font-weight: 600; color: #2563eb">Products catalog</a>
+      <a routerLink="/cart" style="text-decoration: none; font-weight: 600; color: #2563eb">Shopping Cart</a>
+    </nav>
+  </header>
 
-  <section class="mb-3">
-    <h2>Products catalog</h2>
-    <app-products-list (productSelected)="onProductSelected($event)"></app-products-list>
-  </section>
-
-  <section>
-    <h2>Product details</h2>
-    <app-products-details [product]="selectedProduct()"></app-products-details>
-  </section>
-
-  <section class="mt-3">
-    <app-shopping-cart-details></app-shopping-cart-details>
-  </section>
+  <router-outlet></router-outlet>
 </main>
