@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment';
-import { Product, SpringPage } from '../features/shared/types/products.types';
+import { environment } from '../../../../environments/environment';
+import { Product, SpringPage } from '../types/products.types';
 import { map, Observable } from 'rxjs';
 
 @Injectable({

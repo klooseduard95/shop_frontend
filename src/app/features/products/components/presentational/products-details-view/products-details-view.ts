@@ -1,5 +1,5 @@
 import { Component, input, output } from '@angular/core';
-import { Product } from '../../../features/shared/types/products.types';
+import { Product } from '../../../types/products.types';
 
 @Component({
   selector: 'app-products-details-view',

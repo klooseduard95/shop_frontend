@@ -1,4 +1,4 @@
-import { Product } from '../features/shared/types/products.types';
+import { Product } from '../features/products/types/products.types';
 
 export const createMockProduct = (overrides?: Partial<Product>): Product => {
   return {

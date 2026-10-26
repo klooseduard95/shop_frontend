@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ProductsDetails } from './products-details';
-import { createMockProduct } from '../../../mocks/products.mock';
+import { createMockProduct } from '../../../../../mocks/products.mock';
 import { vi } from 'vitest';
 
 describe('ProductsDetails', () => {

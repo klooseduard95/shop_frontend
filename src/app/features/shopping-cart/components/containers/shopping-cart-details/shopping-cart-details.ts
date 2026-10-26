@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ShoppingCartDetailsView } from '../../presentational/shopping-cart-details-view/shopping-cart-details-view';
-import { CartService } from '../../../../shared/services/cart.service';
+import { CartService } from '../../../services/cart.service';
 
 @Component({
   selector: 'app-shopping-cart-details',

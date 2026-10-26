@@ -1,7 +1,7 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CartItem } from '../types/cart.types';
-import { Product } from '../types/products.types';
+import { Product } from '../../products/types/products.types';
 import { OrderCreateRequest } from '../types/order.types';
 import { environment } from '../../../../environments/environment';
 

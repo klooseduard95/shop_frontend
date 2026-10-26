@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { CartItem } from '../../../../shared/types/cart.types';
+import { CartItem } from '../../../types/cart.types';
 import { CommonModule } from '@angular/common';
 
 @Component({

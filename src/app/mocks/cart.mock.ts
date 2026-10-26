@@ -1,4 +1,4 @@
-import { CartItem } from '../features/shared/types/cart.types';
+import { CartItem } from '../features/shopping-cart/types/cart.types';
 import { createMockProduct } from './products.mock';
 
 export const createMockCartItem = (overrides?: Partial<CartItem>): CartItem => {

@@ -4,8 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProductsService } from '../../../services/products.service';
 import { filter, map, switchMap } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { CartService } from '../../../features/shared/services/cart.service';
-import { Product } from '../../../features/shared/types/products.types';
+import { CartService } from '../../../../shopping-cart/services/cart.service';
+import { Product } from '../../../types/products.types';
 
 @Component({
   selector: 'app-products-details',
