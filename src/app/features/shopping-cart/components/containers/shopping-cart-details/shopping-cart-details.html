@@ -1,6 +1,8 @@
 <app-shopping-cart-details-view
   [cartItems]="cartService.cartItems()"
   [totalPrice]="cartService.cartTotal()"
+  [checkoutForm]="checkoutForm"
+  [checkoutError]="checkoutError()"
   (removeItem)="cartService.removeFromCart($event)"
-  (checkout)="cartService.checkout()">
+  (checkout)="handleCheckout()">
 </app-shopping-cart-details-view>

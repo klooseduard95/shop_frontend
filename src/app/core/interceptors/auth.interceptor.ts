@@ -1,6 +1,4 @@
 import { HttpInterceptorFn } from '@angular/common/http';
-import { catchError, throwError } from 'rxjs';
-
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const token = localStorage.getItem('jwt');
 
@@ -12,5 +10,5 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       })
     : req;
 
-  return next(authReq).pipe(catchError((error) => throwError(() => error)));
+  return next(authReq);
 };

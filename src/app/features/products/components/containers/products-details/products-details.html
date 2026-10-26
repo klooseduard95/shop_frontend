@@ -1,5 +1,6 @@
 <app-products-details-view
   [product]="product() ?? null"
+  [isAdmin]="authService.isAdmin()"
   (addToCart)="handleAddToCart($event)"
   (deleteProduct)="handleDelete($event)">
 </app-products-details-view>

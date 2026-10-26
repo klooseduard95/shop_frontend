@@ -6,6 +6,7 @@ import { filter, map, switchMap } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { CartService } from '../../../../shopping-cart/services/cart.service';
 import { Product } from '../../../types/products.types';
+import { AuthService } from '../../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-products-details',
@@ -19,6 +20,7 @@ export class ProductsDetails {
   private readonly router = inject(Router);
   private readonly productService = inject(ProductsService);
   cartService = inject(CartService);
+  authService = inject(AuthService);
 
   private readonly id$ = this.route.paramMap.pipe(
     map((params) => params.get('id')),

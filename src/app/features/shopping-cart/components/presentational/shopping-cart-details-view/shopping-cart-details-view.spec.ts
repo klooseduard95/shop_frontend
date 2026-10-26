@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormControl, FormGroup } from '@angular/forms';
 import { ShoppingCartDetailsView } from './shopping-cart-details-view';
 
 describe('ShoppingCartDetailsView', () => {
@@ -12,6 +13,15 @@ describe('ShoppingCartDetailsView', () => {
 
     fixture = TestBed.createComponent(ShoppingCartDetailsView);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput(
+      'checkoutForm',
+      new FormGroup({
+        country: new FormControl(''),
+        city: new FormControl(''),
+        county: new FormControl(''),
+        streetAddress: new FormControl(''),
+      }),
+    );
     await fixture.whenStable();
   });
 

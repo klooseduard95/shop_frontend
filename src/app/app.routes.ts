@@ -40,5 +40,7 @@ export const routes: Routes = [
   {
     path: 'cart',
     component: ShoppingCartDetails,
+    canActivate: [authGuard, roleGuard],
+    data: { role: 'CUSTOMER' },
   },
 ];

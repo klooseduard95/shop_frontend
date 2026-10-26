@@ -1,4 +1,4 @@
-interface AddressRequest {
+export interface AddressRequest {
   country: string;
   city: string;
   county: string;

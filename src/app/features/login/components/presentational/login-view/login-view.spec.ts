@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormControl, FormGroup } from '@angular/forms';
 import { LoginView } from './login-view';
 
 describe('LoginView', () => {
@@ -12,6 +13,10 @@ describe('LoginView', () => {
 
     fixture = TestBed.createComponent(LoginView);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput(
+      'form',
+      new FormGroup({ username: new FormControl(''), password: new FormControl('') }),
+    );
     await fixture.whenStable();
   });
 
