@@ -15,7 +15,9 @@
         <span class="col-price">{{ product.price }} EUR</span>
         <span class="col-action">
           <button [routerLink]="['/products', product.id]" style="padding: 0.5rem 1rem; cursor: pointer; border-radius: 6px; border: 1px solid #e2e8f0; background: #fff;">View</button>
-          <button (click)="deleteProduct.emit(product.id)" style="padding: 0.5rem 1rem; cursor: pointer; border-radius: 6px; border: 1px solid #e2e8f0; background: #fff;">Delete</button>
+          @if (authService.isAuthenticated() && authService.isAdmin()) {
+            <button (click)="deleteProduct.emit(product.id)" style="padding: 0.5rem 1rem; cursor: pointer; border-radius: 6px; border: 1px solid #e2e8f0; background: #fff;">Delete</button>
+          }
         </span>
       </div>
     } @empty {

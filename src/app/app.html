@@ -3,10 +3,12 @@
     <h1>My Online Shop</h1>
     <nav style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 1rem;">
       <a routerLink="/products">Products catalog</a>
-      <a routerLink="/products/new">+ Add New Product</a>
-      <a routerLink="/cart">Shopping Cart</a>
+      @if (authService.isAuthenticated() && authService.isAdmin()) {
+        <a routerLink="/products/new">+ Add New Product</a>
+      }
+
       @if (authService.isAuthenticated()) {
-        @if (authService.isCustomer()) { <a routerLink="/cart">Coș Cumpărături</a> }
+        @if (authService.isCustomer()) { <a routerLink="/cart">Shopping Cart</a> }
 
         <span>Salut, {{ authService.currentUser()?.username }} ({{ authService.currentUser()?.role }})</span>
         <button (click)="authService.logout()">Logout</button>

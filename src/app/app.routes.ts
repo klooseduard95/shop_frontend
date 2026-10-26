@@ -5,6 +5,7 @@ import { ShoppingCartDetails } from './features/shopping-cart/components/contain
 import { ProductsForm } from './features/products/components/containers/products-form/products-form';
 import { Login } from './features/login/components/containers/login-view/login';
 import { authGuard } from './core/guards/auth.guard';
+import { roleGuard } from './core/guards/role.guard';
 
 export const routes: Routes = [
   {
@@ -23,12 +24,14 @@ export const routes: Routes = [
   {
     path: 'products/new',
     component: ProductsForm,
-    canActivate: [authGuard],
+    canActivate: [authGuard, roleGuard],
+    data: { role: 'ADMIN' },
   },
   {
     path: 'products/:id/edit',
     component: ProductsForm,
-    canActivate: [authGuard],
+    canActivate: [authGuard, roleGuard],
+    data: { role: 'ADMIN' },
   },
   {
     path: 'products/:id',

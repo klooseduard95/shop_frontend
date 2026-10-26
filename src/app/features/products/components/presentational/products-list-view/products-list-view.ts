@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { Product } from '../../../types/products.types';
 import { RouterLink } from '@angular/router';
+import { AuthService } from '../../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-products-list-view',
@@ -12,4 +13,5 @@ import { RouterLink } from '@angular/router';
 export class ProductsListView {
   products = input<Product[]>([]);
   deleteProduct = output<string>();
+  protected readonly authService = inject(AuthService);
 }
