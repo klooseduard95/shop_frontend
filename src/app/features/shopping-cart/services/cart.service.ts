@@ -52,7 +52,7 @@ export class CartService {
       })),
     };
 
-    this.http.post(`${environment.apiUrl}/orders`, payload).subscribe({
+    this.http.post(`${environment.apiUrl}/api/orders`, payload).subscribe({
       next: (response) => {
         console.log('Order created successfully!', response);
         alert('Comanda a fost plasată cu succes!');

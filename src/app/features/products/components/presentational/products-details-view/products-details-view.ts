@@ -12,4 +12,5 @@ export class ProductsDetailsView {
   product = input<Product | null>(null);
   addToCart = output<Product>();
   deleteProduct = output<string>();
+  isAdmin = input<boolean>(false);
 }

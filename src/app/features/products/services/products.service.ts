@@ -9,7 +9,7 @@ import { map, Observable } from 'rxjs';
 })
 export class ProductsService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = `${environment.apiUrl}/products`;
+  private readonly apiUrl = `${environment.apiUrl}/api/products`;
 
   getProducts(): Observable<Product[]> {
     return this.http.get<SpringPage<Product>>(`${this.apiUrl}`).pipe(map((page) => page.content));
