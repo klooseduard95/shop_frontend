@@ -9,6 +9,13 @@ export interface Product {
   imageUrl?: string;
 }
 
+export interface ProductRequest {
+  name: string;
+  price: number;
+  weight: number;
+  categoryId: string;
+}
+
 export interface SpringPage<T> {
   content: T[];
   totalElements: number;

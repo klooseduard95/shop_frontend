@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
-import { Product, SpringPage } from '../types/products.types';
+import { Product, ProductRequest, SpringPage } from '../types/products.types';
 import { map, Observable } from 'rxjs';
 
 @Injectable({
@@ -21,5 +21,13 @@ export class ProductsService {
 
   deleteProduct(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  createProduct(product: ProductRequest) {
+    return this.http.post<Product>(`${this.apiUrl}`, product);
+  }
+
+  updateProduct(id: string, product: ProductRequest) {
+    return this.http.put<Product>(`${this.apiUrl}/${id}`, product);
   }
 }

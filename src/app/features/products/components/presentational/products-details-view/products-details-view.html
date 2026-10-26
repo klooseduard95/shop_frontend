@@ -18,7 +18,9 @@
 
       <div class="actions">
         <button class="btn-primary" (click)="addToCart.emit(selectedProduct)">Add to Cart</button>
-        <button class="btn-secondary">Edit</button>
+        <button [routerLink]="['/products', product()!.id, 'edit']" style="padding: 0.75rem 1.5rem; border-radius: 6px; border: 1px solid #cbd5e1; background: white; cursor: pointer;">
+          Edit
+        </button>
         <button class="btn-secondary" (click)="deleteProduct.emit(selectedProduct.id)">Delete</button>
       </div>
     </div>

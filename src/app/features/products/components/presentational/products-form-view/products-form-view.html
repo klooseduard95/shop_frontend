@@ -1,0 +1,42 @@
+<div class="form-container">
+  <h2>{{ isEditMode() ? 'Edit product' : 'Add new product'}}</h2>
+
+  <form [formGroup]="form()" (ngSubmit)="save.emit()" >
+    <div class="form-group">
+      <label for="name">Product Name</label>
+      <input id="name" type="text" formControlName="name" />
+      @if (form().get('name')?.invalid && form().get('name')?.touched) {
+        <div class="error-message">Product name is required.</div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="price">Price</label>
+      <input id="price" type="number" formControlName="price" />
+      @if (form().get('price')?.invalid && form().get('price')?.touched) {
+        <div class="error-message">Price is required and must be a positive number.</div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="weight">Weight</label>
+      <input id="weight" type="number" formControlName="weight" />
+      @if (form().get('weight')?.invalid && form().get('weight')?.touched) {
+        <div class="error-message">Weight is required and must be a positive number.</div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="categoryId">Category ID</label>
+      <input id="categoryId" type="text" formControlName="categoryId" placeholder="e.g. 123e4567-e89b-12d3-a456-426614174000"/>
+      @if (form().get('categoryId')?.invalid && form().get('categoryId')?.touched) {
+        <div class="error-message">Category ID is required.</div>
+      }
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn-cancel" (click)="cancel.emit()">Cancel</button>
+      <button type="submit" class="btn-save" [disabled]="form().invalid">Save</button>
+    </div>
+  </form>
+</div>
