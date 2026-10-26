@@ -1,3 +1,4 @@
 <app-products-list-view
-  [products]="products() ?? []">
+  [products]="products() ?? []"
+  (deleteProduct)="handleDelete($event)">
 </app-products-list-view>
