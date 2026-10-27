@@ -10,7 +10,7 @@ import { RouterLink } from '@angular/router';
 })
 export class ProductsDetailsView {
   product = input<Product | null>(null);
+  isAdmin = input<boolean>(false);
   addToCart = output<Product>();
   deleteProduct = output<string>();
-  isAdmin = input<boolean>(false);
 }

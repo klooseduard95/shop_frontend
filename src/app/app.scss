@@ -11,6 +11,15 @@ main {
   margin-top: 3rem;
 }
 
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 1rem;
+}
+
 nav a {
   text-decoration: none;
   font-weight: 600;

@@ -1,8 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ProductsList } from './products-list';
-import { ProductsService } from '../../../services/products.service';
-import { AuthService } from '../../../../../core/services/auth.service';
-import { of } from 'rxjs';
+import { provideMockStore } from '@ngrx/store/testing';
 
 describe('ProductsList', () => {
   let component: ProductsList;
@@ -12,8 +10,18 @@ describe('ProductsList', () => {
     await TestBed.configureTestingModule({
       imports: [ProductsList],
       providers: [
-        { provide: ProductsService, useValue: { getProducts: () => of([]), deleteProduct: () => of(void 0) } },
-        { provide: AuthService, useValue: { isAuthenticated: () => false, isAdmin: () => false } },
+        provideMockStore({
+          initialState: {
+            products: { items: [], selectedProduct: null, loading: false, error: null },
+            auth: {
+              user: null,
+              token: null,
+              initialized: true,
+              loading: false,
+              error: null,
+            },
+          },
+        }),
       ],
     }).compileComponents();
 

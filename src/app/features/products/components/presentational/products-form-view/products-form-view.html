@@ -1,7 +1,7 @@
 <div class="form-container">
-  <h2>{{ isEditMode() ? 'Edit product' : 'Add new product'}}</h2>
+  <h2>{{ isEditMode() ? 'Edit product' : 'Add new product' }}</h2>
 
-  <form [formGroup]="form()" (ngSubmit)="save.emit()" >
+  <form [formGroup]="form()" (ngSubmit)="save.emit()">
     <div class="form-group">
       <label for="name">Product Name</label>
       <input id="name" type="text" formControlName="name" />
@@ -28,7 +28,12 @@
 
     <div class="form-group">
       <label for="categoryId">Category ID</label>
-      <input id="categoryId" type="text" formControlName="categoryId" placeholder="e.g. 123e4567-e89b-12d3-a456-426614174000"/>
+      <input
+        id="categoryId"
+        type="text"
+        formControlName="categoryId"
+        placeholder="e.g. 123e4567-e89b-12d3-a456-426614174000"
+      />
       @if (form().get('categoryId')?.invalid && form().get('categoryId')?.touched) {
         <div class="error-message">Category ID is required.</div>
       }
@@ -36,7 +41,13 @@
 
     <div class="actions">
       <button type="button" class="btn-cancel" (click)="cancel.emit()">Cancel</button>
-      <button type="submit" class="btn-save" [disabled]="form().invalid">Save</button>
+      <button type="submit" class="btn-save" [disabled]="form().invalid || saving()">
+        {{ saving() ? 'Saving...' : 'Save' }}
+      </button>
     </div>
+
+    @if (saveError()) {
+      <div class="error-message">{{ saveError() }}</div>
+    }
   </form>
 </div>

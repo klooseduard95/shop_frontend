@@ -1,9 +1,20 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, effect, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ProductsService } from '../../../services/products.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ProductRequest } from '../../../types/products.types';
 import { ProductsFormView } from '../../presentational/products-form-view/products-form-view';
+import { Store } from '@ngrx/store';
+import {
+  createProduct,
+  loadProduct,
+  resetProductSaveState,
+  updateProduct,
+} from '../../../../shared/state/app.actions';
+import {
+  selectProductSaveError,
+  selectProductSaving,
+  selectSelectedProduct,
+} from '../../../../shared/state/app.reducers';
 
 @Component({
   imports: [ProductsFormView],
@@ -14,10 +25,14 @@ import { ProductsFormView } from '../../presentational/products-form-view/produc
 export class ProductsForm implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly productsService = inject(ProductsService);
+  private readonly store = inject(Store);
 
-  isEditMode = signal(false);
-  currentProductId: string | null = null;
+  readonly isEditMode = signal(false);
+  readonly saving = this.store.selectSignal(selectProductSaving);
+  readonly saveError = this.store.selectSignal(selectProductSaveError);
+  private readonly selectedProduct = this.store.selectSignal(selectSelectedProduct);
+  private currentProductId: string | null = null;
+  private patchedProductId: string | null = null;
 
   productForm = new FormGroup({
     name: new FormControl('', {
@@ -38,49 +53,44 @@ export class ProductsForm implements OnInit {
     }),
   });
 
+  private readonly patchSelectedProduct = effect(() => {
+    const product = this.selectedProduct();
+
+    if (product && product.id === this.currentProductId && product.id !== this.patchedProductId) {
+      this.productForm.patchValue({
+        name: product.name,
+        price: product.price,
+        weight: product.weight,
+        categoryId: product.categoryId,
+      });
+      this.patchedProductId = product.id;
+    }
+  });
+
   ngOnInit(): void {
+    this.store.dispatch(resetProductSaveState());
     const id = this.route.snapshot.paramMap.get('id');
 
     if (id) {
       this.isEditMode.set(true);
       this.currentProductId = id;
-      this.productsService.getProductById(id).subscribe({
-        next: (product) => {
-          this.productForm.patchValue({
-            name: product.name,
-            price: product.price,
-            weight: product.weight,
-            categoryId: product.categoryId,
-          });
-        },
-        error: (err) => {
-          console.error('Error fetching product:', err);
-        },
-      });
+      this.store.dispatch(loadProduct({ id }));
     }
   }
 
-  handleSave() {
+  handleSave(): void {
     if (this.productForm.invalid) {
+      this.productForm.markAllAsTouched();
       return;
     }
 
-    const request: ProductRequest = this.productForm.getRawValue();
+    const product: ProductRequest = this.productForm.getRawValue();
 
-    const saveObservable =
-      this.isEditMode() && this.currentProductId
-        ? this.productsService.updateProduct(this.currentProductId, request)
-        : this.productsService.createProduct(request);
-
-    saveObservable.subscribe({
-      next: async () => {
-        console.log('Successfully updated product');
-        await this.router.navigate(['/products']);
-      },
-      error: (err) => {
-        console.error('Error saving product:', err);
-      },
-    });
+    if (this.currentProductId) {
+      this.store.dispatch(updateProduct({ id: this.currentProductId, product }));
+    } else {
+      this.store.dispatch(createProduct({ product }));
+    }
   }
 
   async handleCancel(): Promise<void> {

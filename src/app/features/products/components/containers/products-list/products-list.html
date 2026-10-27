@@ -1,4 +1,8 @@
+@if (loading$ | async) {
+  <p>Loading products...</p>
+}
 <app-products-list-view
-  [products]="products() ?? []"
-  (deleteProduct)="handleDelete($event)">
+  [products]="(products$ | async) ?? []"
+  [isAdmin]="(isAdmin$ | async) ?? false"
+>
 </app-products-list-view>

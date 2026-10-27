@@ -96,3 +96,75 @@
   color: #64748b;
   font-size: 1.125rem;
 }
+
+.checkout-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin: 1.5rem;
+  padding: 1.5rem;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgb(15 23 42 / 6%);
+}
+
+.checkout-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  color: #334155;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.checkout-form input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.75rem 0.875rem;
+  color: #0f172a;
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font: inherit;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.checkout-form input:hover {
+  border-color: #94a3b8;
+}
+
+.checkout-form input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgb(37 99 235 / 15%);
+}
+
+.checkout-form input.ng-invalid.ng-touched {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgb(220 38 38 / 10%);
+}
+
+.checkout-form .error {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 0.75rem 1rem;
+  color: #991b1b;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  font-size: 0.875rem;
+}
+
+.btn-checkout:disabled {
+  color: #94a3b8;
+  background-color: #e2e8f0;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-checkout:disabled:hover {
+  background-color: #e2e8f0;
+}

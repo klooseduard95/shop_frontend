@@ -11,5 +11,6 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 export class LoginView {
   form = input.required<FormGroup>();
   errorMessage = input<string | null>(null);
+  loading = input(false);
   submitLogin = output<void>();
 }

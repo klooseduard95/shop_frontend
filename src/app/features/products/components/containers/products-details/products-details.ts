@@ -1,12 +1,13 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
 import { ProductsDetailsView } from '../../presentational/products-details-view/products-details-view';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ProductsService } from '../../../services/products.service';
-import { filter, map, switchMap } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { filter, map } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { CartService } from '../../../../shopping-cart/services/cart.service';
 import { Product } from '../../../types/products.types';
-import { AuthService } from '../../../../../core/services/auth.service';
+import { Store } from '@ngrx/store';
+import { addToCart, deleteProduct, loadProduct } from '../../../../shared/state/app.actions';
+import { AppState } from '../../../../../app.state';
+import { selectIsAdmin, selectSelectedProduct } from '../../../../shared/state/app.reducers';
 
 @Component({
   selector: 'app-products-details',
@@ -17,32 +18,32 @@ import { AuthService } from '../../../../../core/services/auth.service';
 })
 export class ProductsDetails {
   private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
-  private readonly productService = inject(ProductsService);
-  cartService = inject(CartService);
-  authService = inject(AuthService);
+  private readonly store = inject(Store<AppState>);
 
-  private readonly id$ = this.route.paramMap.pipe(
-    map((params) => params.get('id')),
-    filter((id): id is string => !!id),
+  private readonly id = toSignal(
+    this.route.paramMap.pipe(
+      map((params) => params.get('id')),
+      filter((id): id is string => !!id),
+    ),
   );
 
-  product = toSignal(this.id$.pipe(switchMap((id) => this.productService.getProductById(id))));
+  readonly product = this.store.selectSignal(selectSelectedProduct);
+  readonly isAdmin = this.store.selectSignal(selectIsAdmin);
+
+  private readonly loadProductEffect = effect(() => {
+    const id = this.id();
+    if (id) {
+      this.store.dispatch(loadProduct({ id }));
+    }
+  });
 
   handleAddToCart(product: Product): void {
-    this.cartService.addToCart(product);
-    console.log(`Product ${product.name} added to cart. Total: ${this.cartService.cartTotal()}`);
+    this.store.dispatch(addToCart({ product }));
   }
 
   handleDelete(id: string): void {
     if (confirm('Are you sure you want to delete this product?')) {
-      this.productService.deleteProduct(id).subscribe({
-        next: async () => {
-          console.log('Product deleted');
-          await this.router.navigate(['/products']);
-        },
-        error: (err) => console.error('Failed to delete product', err),
-      });
+      this.store.dispatch(deleteProduct({ id }));
     }
   }
 }

@@ -1,16 +1,23 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { catchError, map, of } from 'rxjs';
-import { AuthService } from '../services/auth.service';
+import { filter, map, take } from 'rxjs';
+import { Store } from '@ngrx/store';
 import { Role } from '../../features/shared/types/users.types';
+import { selectAuthState } from '../../features/shared/state/app.reducers';
 
 export const roleGuard: CanActivateFn = (route) => {
-  const authService = inject(AuthService);
+  const store = inject(Store);
   const router = inject(Router);
   const expectedRole = route.data['role'] as Role;
 
-  return authService.ensureProfile().pipe(
-    map((user) => (user?.role === expectedRole ? true : router.createUrlTree(['/products']))),
-    catchError(() => of(router.createUrlTree(['/login']))),
+  return store.select(selectAuthState).pipe(
+    filter(({ initialized }) => initialized),
+    take(1),
+    map(({ user }) => {
+      if (!user) {
+        return router.createUrlTree(['/login']);
+      }
+      return user.role === expectedRole ? true : router.createUrlTree(['/products']);
+    }),
   );
 };

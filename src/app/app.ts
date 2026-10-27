@@ -1,6 +1,13 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
-import { AuthService } from './core/services/auth.service';
+import { Store } from '@ngrx/store';
+import { logout } from './features/shared/state/app.actions';
+import {
+  selectCurrentUser,
+  selectIsAdmin,
+  selectIsAuthenticated,
+  selectIsCustomer,
+} from './features/shared/state/app.reducers';
 
 @Component({
   selector: 'app-root',
@@ -10,5 +17,14 @@ import { AuthService } from './core/services/auth.service';
   templateUrl: './app.html',
 })
 export class App {
-  readonly authService = inject(AuthService);
+  private readonly store = inject(Store);
+
+  readonly currentUser = this.store.selectSignal(selectCurrentUser);
+  readonly isAuthenticated = this.store.selectSignal(selectIsAuthenticated);
+  readonly isAdmin = this.store.selectSignal(selectIsAdmin);
+  readonly isCustomer = this.store.selectSignal(selectIsCustomer);
+
+  handleLogout(): void {
+    this.store.dispatch(logout());
+  }
 }

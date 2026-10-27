@@ -20,6 +20,7 @@ export const routes: Routes = [
   {
     path: 'products',
     component: ProductsList,
+    canActivate: [authGuard],
   },
   {
     path: 'products/new',

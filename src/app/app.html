@@ -1,17 +1,19 @@
-<main style="padding: 2rem; font-family: sans-serif;">
+<main style="padding: 2rem; font-family: sans-serif">
   <header>
     <h1>My Online Shop</h1>
-    <nav style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 1rem;">
+    <nav>
       <a routerLink="/products">Products catalog</a>
-      @if (authService.isAuthenticated() && authService.isAdmin()) {
+      @if (isAuthenticated() && isAdmin()) {
         <a routerLink="/products/new">+ Add New Product</a>
       }
 
-      @if (authService.isAuthenticated()) {
-        @if (authService.isCustomer()) { <a routerLink="/cart">Shopping Cart</a> }
+      @if (isAuthenticated()) {
+        @if (isCustomer()) {
+          <a routerLink="/cart">Shopping Cart</a>
+        }
 
-        <span>Salut, {{ authService.currentUser()?.username }} ({{ authService.currentUser()?.role }})</span>
-        <button (click)="authService.logout()">Logout</button>
+        <span>Salut, {{ currentUser()?.username }} ({{ currentUser()?.role }})</span>
+        <button (click)="handleLogout()">Logout</button>
       } @else {
         <a routerLink="/login">Login</a>
       }

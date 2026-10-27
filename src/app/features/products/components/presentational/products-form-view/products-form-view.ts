@@ -11,6 +11,8 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 export class ProductsFormView {
   form = input.required<FormGroup>();
   isEditMode = input<boolean>(false);
+  saving = input(false);
+  saveError = input<string | null>(null);
 
   save = output<void>();
   cancel = output<void>();

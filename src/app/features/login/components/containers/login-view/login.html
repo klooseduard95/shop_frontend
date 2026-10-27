@@ -1,5 +1,7 @@
 <app-login-view
   [form]="loginForm"
   [errorMessage]="errorMessage()"
-  (submitLogin)="handleLogin()">
+  [loading]="loading()"
+  (submitLogin)="handleLogin()"
+>
 </app-login-view>

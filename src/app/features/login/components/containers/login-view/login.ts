@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { AuthService } from '../../../../../core/services/auth.service';
-import { Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { LoginView } from '../../presentational/login-view/login-view';
+import { Store } from '@ngrx/store';
+import { login } from '../../../../shared/state/app.actions';
+import { selectAuthError, selectAuthLoading } from '../../../../shared/state/app.reducers';
 
 @Component({
   imports: [LoginView],
@@ -12,10 +13,10 @@ import { LoginView } from '../../presentational/login-view/login-view';
   templateUrl: './login.html',
 })
 export class Login {
-  private readonly authService = inject(AuthService);
-  private readonly router = inject(Router);
+  private readonly store = inject(Store);
 
-  errorMessage = signal<string | null>(null);
+  readonly errorMessage = this.store.selectSignal(selectAuthError);
+  readonly loading = this.store.selectSignal(selectAuthLoading);
 
   loginForm = new FormGroup({
     username: new FormControl('', { validators: [Validators.required], nonNullable: true }),
@@ -25,9 +26,6 @@ export class Login {
   handleLogin(): void {
     if (this.loginForm.invalid) return;
 
-    this.authService.login(this.loginForm.getRawValue()).subscribe({
-      next: () => this.router.navigate(['/products']),
-      error: () => this.errorMessage.set('Invalid credentials. Please try again.'),
-    });
+    this.store.dispatch(login({ credentials: this.loginForm.getRawValue() }));
   }
 }

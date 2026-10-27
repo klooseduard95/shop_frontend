@@ -1,36 +1,29 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { ProductsListView } from '../../presentational/products-list-view/products-list-view';
-import { ProductsService } from '../../../services/products.service';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { switchMap } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { loadProducts } from '../../../../shared/state/app.actions';
+import {
+  selectAllProducts,
+  selectIsAdmin,
+  selectProductsLoading,
+} from '../../../../shared/state/app.reducers';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-products-list',
-  imports: [ProductsListView],
+  imports: [ProductsListView, AsyncPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './products-list.scss',
   templateUrl: './products-list.html',
 })
-export class ProductsList {
-  private readonly productService = inject(ProductsService);
-  private readonly reloadProducts = signal(0);
+export class ProductsList implements OnInit {
+  private readonly store = inject(Store);
 
-  products = toSignal(
-    toObservable(this.reloadProducts).pipe(switchMap(() => this.productService.getProducts())),
-    { initialValue: [] },
-  );
+  products$ = this.store.select(selectAllProducts);
+  loading$ = this.store.select(selectProductsLoading);
+  isAdmin$ = this.store.select(selectIsAdmin);
 
-  handleDelete(id: string): void {
-    if (!confirm('Are you sure you want to delete this product?')) {
-      return;
-    }
-    this.productService.deleteProduct(id).subscribe({
-      next: () => {
-        this.reloadProducts.update((value) => value + 1);
-      },
-      error: (error) => {
-        console.error('Failed to delete product', error);
-      },
-    });
+  ngOnInit(): void {
+    this.store.dispatch(loadProducts());
   }
 }

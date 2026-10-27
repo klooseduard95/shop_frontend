@@ -1,8 +1,15 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ShoppingCartDetailsView } from '../../presentational/shopping-cart-details-view/shopping-cart-details-view';
-import { CartService } from '../../../services/cart.service';
 import { AddressRequest } from '../../../types/order.types';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../../../app.state';
+import {
+  selectCartError,
+  selectCartItems,
+  selectCartTotal,
+} from '../../../../shared/state/app.reducers';
+import { checkout, removeFromCart } from '../../../../shared/state/app.actions';
 
 @Component({
   selector: 'app-shopping-cart-details',
@@ -12,8 +19,11 @@ import { AddressRequest } from '../../../types/order.types';
   templateUrl: './shopping-cart-details.html',
 })
 export class ShoppingCartDetails {
-  cartService = inject(CartService);
-  checkoutError = signal<string | null>(null);
+  private readonly store = inject(Store<AppState>);
+
+  readonly cartItems = this.store.selectSignal(selectCartItems);
+  readonly cartTotal = this.store.selectSignal(selectCartTotal);
+  readonly checkoutError = this.store.selectSignal(selectCartError);
 
   checkoutForm = new FormGroup({
     country: new FormControl('', { validators: [Validators.required], nonNullable: true }),
@@ -29,9 +39,10 @@ export class ShoppingCartDetails {
     }
 
     const address: AddressRequest = this.checkoutForm.getRawValue();
-    this.checkoutError.set(null);
-    this.cartService.checkout(address).subscribe({
-      error: () => this.checkoutError.set('Unable to place the order. Please try again.'),
-    });
+    this.store.dispatch(checkout({ deliveryAddress: address }));
+  }
+
+  handleRemoveItem(productId: string): void {
+    this.store.dispatch(removeFromCart({ productId }));
   }
 }
