@@ -1,53 +1,52 @@
 <div class="form-container">
-  <h2>{{ isEditMode() ? 'Edit product' : 'Add new product' }}</h2>
+  <header class="form-header">
+    <h2>{{ isEditMode() ? 'Edit product' : 'Add new product' }}</h2>
+    <p>Enter the product details for your catalogue.</p>
+  </header>
 
   <form [formGroup]="form()" (ngSubmit)="save.emit()">
-    <div class="form-group">
-      <label for="name">Product Name</label>
-      <input id="name" type="text" formControlName="name" />
+    <mat-form-field appearance="outline">
+      <mat-label>Product name</mat-label>
+      <input matInput type="text" formControlName="name" autocomplete="off" />
       @if (form().get('name')?.invalid && form().get('name')?.touched) {
-        <div class="error-message">Product name is required.</div>
+        <mat-error>Product name is required.</mat-error>
       }
-    </div>
+    </mat-form-field>
 
-    <div class="form-group">
-      <label for="price">Price</label>
-      <input id="price" type="number" formControlName="price" />
-      @if (form().get('price')?.invalid && form().get('price')?.touched) {
-        <div class="error-message">Price is required and must be a positive number.</div>
-      }
-    </div>
+    <mat-form-field appearance="outline">
+      <mat-label>Price</mat-label>
+      <input matInput type="number" formControlName="price" min="0" step="0.01" />
+      <span matSuffix>EUR</span>
+    </mat-form-field>
 
-    <div class="form-group">
-      <label for="weight">Weight</label>
-      <input id="weight" type="number" formControlName="weight" />
-      @if (form().get('weight')?.invalid && form().get('weight')?.touched) {
-        <div class="error-message">Weight is required and must be a positive number.</div>
-      }
-    </div>
+    <mat-form-field appearance="outline">
+      <mat-label>Weight</mat-label>
+      <input matInput type="number" formControlName="weight" min="0" step="0.01" />
+      <span matSuffix>kg</span>
+    </mat-form-field>
 
-    <div class="form-group">
-      <label for="categoryId">Category ID</label>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Category ID</mat-label>
       <input
-        id="categoryId"
+        matInput
         type="text"
         formControlName="categoryId"
         placeholder="e.g. 123e4567-e89b-12d3-a456-426614174000"
       />
       @if (form().get('categoryId')?.invalid && form().get('categoryId')?.touched) {
-        <div class="error-message">Category ID is required.</div>
+        <mat-error>Category ID is required.</mat-error>
       }
-    </div>
-
-    <div class="actions">
-      <button type="button" class="btn-cancel" (click)="cancel.emit()">Cancel</button>
-      <button type="submit" class="btn-save" [disabled]="form().invalid || saving()">
-        {{ saving() ? 'Saving...' : 'Save' }}
-      </button>
-    </div>
+    </mat-form-field>
 
     @if (saveError()) {
-      <div class="error-message">{{ saveError() }}</div>
+      <p class="form-error" role="alert">{{ saveError() }}</p>
     }
+
+    <div class="actions">
+      <button mat-button type="button" (click)="cancel.emit()">Cancel</button>
+      <button mat-flat-button type="submit" [disabled]="form().invalid || saving()">
+        {{ saving() ? 'Saving...' : 'Save product' }}
+      </button>
+    </div>
   </form>
 </div>

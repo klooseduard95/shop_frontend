@@ -17,13 +17,20 @@
       </div>
 
       <div class="actions">
-        <button class="btn-primary" (click)="addToCart.emit(selectedProduct)">Add to Cart</button>
+        <button mat-flat-button color="accent" (click)="addToCart.emit(product()!)">
+          <mat-icon>add_shopping_cart</mat-icon>
+          Add to Cart
+        </button>
 
         @if (isAdmin()) {
-          <button [routerLink]="['/products', product()!.id, 'edit']" style="padding: 0.75rem 1.5rem; border-radius: 6px; border: 1px solid #cbd5e1; background: white; cursor: pointer;">
+          <button mat-stroked-button color="primary" [routerLink]="['/products', product()!.id, 'edit']">
+            <mat-icon>edit</mat-icon>
             Edit
           </button>
-          <button class="btn-secondary" (click)="deleteProduct.emit(selectedProduct.id)">Delete</button>
+          <button mat-flat-button color="warn" (click)="deleteProduct.emit(product()!.id)">
+            <mat-icon>delete_forever</mat-icon>
+            Delete
+          </button>
         }
       </div>
     </div>

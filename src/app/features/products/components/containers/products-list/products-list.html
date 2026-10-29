@@ -4,5 +4,6 @@
 <app-products-list-view
   [products]="(products$ | async) ?? []"
   [isAdmin]="(isAdmin$ | async) ?? false"
+  (deleteProduct)="handleDelete($event)"
 >
 </app-products-list-view>

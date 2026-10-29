@@ -1,24 +1,62 @@
-<main style="padding: 2rem; font-family: sans-serif">
-  <header>
-    <h1>My Online Shop</h1>
-    <nav>
-      <a routerLink="/products">Products catalog</a>
-      @if (isAuthenticated() && isAdmin()) {
-        <a routerLink="/products/new">+ Add New Product</a>
-      }
+<div class="app-shell">
+  <header class="site-header">
+    <div class="header-content">
+      <a class="brand" routerLink="/products" aria-label="My Online Shop home">
+        My Online Shop
+      </a>
 
-      @if (isAuthenticated()) {
-        @if (isCustomer()) {
-          <a routerLink="/cart">Shopping Cart</a>
+      <nav class="primary-navigation" aria-label="Primary navigation">
+        <a
+          routerLink="/products"
+          routerLinkActive="is-active"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+          Products
+        </a>
+
+        @if (isAuthenticated() && isAdmin()) {
+          <a
+            routerLink="/products/new"
+            routerLinkActive="is-active"
+            mat-stroked-button
+          >
+            Add product
+          </a>
         }
 
-        <span>Salut, {{ currentUser()?.username }} ({{ currentUser()?.role }})</span>
-        <button (click)="handleLogout()">Logout</button>
-      } @else {
-        <a routerLink="/login">Login</a>
-      }
-    </nav>
+        @if (isAuthenticated()) {
+          <a routerLink="/cart" routerLinkActive="is-active">
+            Cart
+          </a>
+        }
+      </nav>
+
+      <div class="account-actions">
+        @if (isAuthenticated()) {
+          <span class="user-summary">
+            <span class="user-name">{{ currentUser()?.username }}</span>
+            <span class="user-role">{{ currentUser()?.role }}</span>
+          </span>
+
+          <button mat-button type="button" (click)="handleLogout()">
+            Logout
+          </button>
+        } @else {
+          <a mat-flat-button routerLink="/login">Login</a>
+        }
+      </div>
+    </div>
   </header>
 
-  <router-outlet></router-outlet>
-</main>
+  <main class="page-content">
+    <router-outlet></router-outlet>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <a class="brand footer-brand" routerLink="/products">My Online Shop</a>
+      <p>Thoughtful products, simply delivered.</p>
+      <span>&copy; 2026 My Online Shop</span>
+    </div>
+  </footer>
+</div>

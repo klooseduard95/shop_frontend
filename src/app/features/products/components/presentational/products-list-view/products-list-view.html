@@ -14,32 +14,15 @@
       <span class="col-name fw-medium">{{ product.name }}</span>
       <span class="col-price">{{ product.price }} EUR</span>
       <span class="col-action">
-        <button
-          [routerLink]="['/products', product.id]"
-          style="
-            padding: 0.5rem 1rem;
-            cursor: pointer;
-            border-radius: 6px;
-            border: 1px solid #e2e8f0;
-            background: #fff;
-          "
-        >
+        <button mat-stroked-button [routerLink]="['/products', product.id]">
           View
         </button>
-        @if (isAdmin()) {
-          <button
-            (click)="deleteProduct.emit(product.id)"
-            style="
-              padding: 0.5rem 1rem;
-              cursor: pointer;
-              border-radius: 6px;
-              border: 1px solid #e2e8f0;
-              background: #fff;
-            "
-          >
+
+              @if (isAdmin()) {
+                <button mat-button color="warn" (click)="deleteProduct.emit(product.id)">
             Delete
           </button>
-        }
+              }
       </span>
     </div>
   } @empty {
