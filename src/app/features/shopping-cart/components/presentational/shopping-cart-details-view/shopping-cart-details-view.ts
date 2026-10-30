@@ -40,9 +40,9 @@ import { MatInput } from '@angular/material/input';
     MatInput,
     MatError,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrl: './shopping-cart-details-view.scss',
   templateUrl: './shopping-cart-details-view.html',
+  styleUrl: './shopping-cart-details-view.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShoppingCartDetailsView {
   cartItems = input<CartItem[]>([]);

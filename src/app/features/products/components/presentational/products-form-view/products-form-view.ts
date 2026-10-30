@@ -6,11 +6,11 @@ import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
 
 @Component({
-  imports: [ReactiveFormsModule, MatFormField, MatLabel, MatError, MatInput, MatButton, MatSuffix],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-products-form-view',
-  styleUrl: './products-form-view.scss',
+  imports: [ReactiveFormsModule, MatFormField, MatLabel, MatError, MatInput, MatButton, MatSuffix],
   templateUrl: './products-form-view.html',
+  styleUrl: './products-form-view.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductsFormView {
   form = input.required<FormGroup>();

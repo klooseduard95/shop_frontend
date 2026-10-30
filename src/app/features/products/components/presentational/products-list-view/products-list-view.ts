@@ -5,10 +5,10 @@ import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-products-list-view',
-  styleUrl: './products-list-view.scss',
-  templateUrl: './products-list-view.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink, MatButton],
+  templateUrl: './products-list-view.html',
+  styleUrl: './products-list-view.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductsListView {
   products = input<Product[]>([]);

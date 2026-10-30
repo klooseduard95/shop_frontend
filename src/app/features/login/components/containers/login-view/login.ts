@@ -6,11 +6,11 @@ import { login } from '../../../../shared/state/app.actions';
 import { selectAuthError, selectAuthLoading } from '../../../../shared/state/app.reducers';
 
 @Component({
-  imports: [LoginView],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-login',
-  styleUrl: './login.scss',
+  imports: [LoginView],
   templateUrl: './login.html',
+  styleUrl: './login.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Login {
   private readonly store = inject(Store);

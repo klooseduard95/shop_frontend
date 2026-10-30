@@ -11,9 +11,9 @@ import {
 @Component({
   selector: 'app-products-list',
   imports: [ProductsListView],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrl: './products-list.scss',
   templateUrl: './products-list.html',
+  styleUrl: './products-list.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductsList implements OnInit {
   private readonly store = inject(Store);

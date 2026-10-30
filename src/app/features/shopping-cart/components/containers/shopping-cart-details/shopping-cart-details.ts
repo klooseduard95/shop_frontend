@@ -14,9 +14,9 @@ import { checkout, removeFromCart } from '../../../../shared/state/app.actions';
 @Component({
   selector: 'app-shopping-cart-details',
   imports: [ShoppingCartDetailsView],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrl: './shopping-cart-details.scss',
   templateUrl: './shopping-cart-details.html',
+  styleUrl: './shopping-cart-details.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShoppingCartDetails {
   private readonly store = inject(Store<AppState>);

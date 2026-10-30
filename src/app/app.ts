@@ -12,9 +12,9 @@ import {
 @Component({
   selector: 'app-root',
   imports: [MatButton, RouterLink, RouterLinkActive, RouterOutlet],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrl: './app.scss',
   templateUrl: './app.html',
+  styleUrl: './app.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
   private readonly store = inject(Store);

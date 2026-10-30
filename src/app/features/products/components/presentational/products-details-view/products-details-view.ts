@@ -7,9 +7,9 @@ import { MatIcon } from '@angular/material/icon';
 @Component({
   selector: 'app-products-details-view',
   imports: [RouterLink, MatButton, MatIcon],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrl: './products-details-view.scss',
   templateUrl: './products-details-view.html',
+  styleUrl: './products-details-view.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductsDetailsView {
   product = input<Product | null>(null);

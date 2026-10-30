@@ -12,9 +12,9 @@ import { selectIsAdmin, selectSelectedProduct } from '../../../../shared/state/a
 @Component({
   selector: 'app-products-details',
   imports: [ProductsDetailsView],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrl: './products-details.scss',
   templateUrl: './products-details.html',
+  styleUrl: './products-details.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductsDetails {
   private readonly route = inject(ActivatedRoute);

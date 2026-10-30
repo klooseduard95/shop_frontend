@@ -5,11 +5,11 @@ import { MatButton } from '@angular/material/button';
 import { MatInput } from '@angular/material/input';
 
 @Component({
-  imports: [ReactiveFormsModule, MatFormField, MatLabel, MatError, MatButton, MatInput],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-login-view',
-  styleUrl: './login-view.scss',
+  imports: [ReactiveFormsModule, MatFormField, MatLabel, MatError, MatButton, MatInput],
   templateUrl: './login-view.html',
+  styleUrl: './login-view.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginView {
   form = input.required<FormGroup>();

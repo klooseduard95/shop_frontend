@@ -17,11 +17,11 @@ import {
 } from '../../../../shared/state/app.reducers';
 
 @Component({
-  imports: [ProductsFormView],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-products-form',
-  styleUrl: './products-form.scss',
+  imports: [ProductsFormView],
   templateUrl: './products-form.html',
+  styleUrl: './products-form.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductsForm implements OnInit {
   private readonly route = inject(ActivatedRoute);
