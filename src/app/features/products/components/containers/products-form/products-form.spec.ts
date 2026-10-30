@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { of } from 'rxjs';
 import { ProductsForm } from './products-form';
 import {
   createProduct,
@@ -32,7 +32,9 @@ describe('ProductsForm', () => {
       providers: [
         {
           provide: ActivatedRoute,
-          useValue: { snapshot: { paramMap: { get: () => routeId } } },
+          useValue: {
+            paramMap: of(convertToParamMap(routeId ? { id: routeId } : {})),
+          },
         },
         { provide: Router, useValue: router },
         provideMockStore({

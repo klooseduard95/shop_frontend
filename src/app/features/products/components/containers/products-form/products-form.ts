@@ -1,6 +1,15 @@
-import { ChangeDetectionStrategy, Component, effect, inject, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs';
 import { ProductRequest } from '../../../types/products.types';
 import { ProductsFormView } from '../../presentational/products-form-view/products-form-view';
 import { Store } from '@ngrx/store';
@@ -28,11 +37,14 @@ export class ProductsForm implements OnInit {
   private readonly router = inject(Router);
   private readonly store = inject(Store);
 
-  readonly isEditMode = signal(false);
+  private readonly productId = toSignal(
+    this.route.paramMap.pipe(map((params) => params.get('id'))),
+    { initialValue: null },
+  );
+  readonly isEditMode = computed(() => !!this.productId());
   readonly saving = this.store.selectSignal(selectProductSaving);
   readonly saveError = this.store.selectSignal(selectProductSaveError);
   private readonly selectedProduct = this.store.selectSignal(selectSelectedProduct);
-  private currentProductId: string | null = null;
   private patchedProductId: string | null = null;
 
   productForm = new FormGroup({
@@ -57,7 +69,7 @@ export class ProductsForm implements OnInit {
   private readonly patchSelectedProduct = effect(() => {
     const product = this.selectedProduct();
 
-    if (product && product.id === this.currentProductId && product.id !== this.patchedProductId) {
+    if (product?.id === this.productId() && product.id !== this.patchedProductId) {
       this.productForm.patchValue({
         name: product.name,
         price: product.price,
@@ -68,15 +80,15 @@ export class ProductsForm implements OnInit {
     }
   });
 
-  ngOnInit(): void {
-    this.store.dispatch(resetProductSaveState());
-    const id = this.route.snapshot.paramMap.get('id');
-
+  private readonly loadProductEffect = effect(() => {
+    const id = this.productId();
     if (id) {
-      this.isEditMode.set(true);
-      this.currentProductId = id;
       this.store.dispatch(loadProduct({ id }));
     }
+  });
+
+  ngOnInit(): void {
+    this.store.dispatch(resetProductSaveState());
   }
 
   handleSave(): void {
@@ -87,8 +99,9 @@ export class ProductsForm implements OnInit {
 
     const product: ProductRequest = this.productForm.getRawValue();
 
-    if (this.currentProductId) {
-      this.store.dispatch(updateProduct({ id: this.currentProductId, product }));
+    const id = this.productId();
+    if (id) {
+      this.store.dispatch(updateProduct({ id, product }));
     } else {
       this.store.dispatch(createProduct({ product }));
     }
