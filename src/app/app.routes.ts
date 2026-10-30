@@ -3,7 +3,7 @@ import { ProductsList } from './features/products/components/containers/products
 import { ProductsDetails } from './features/products/components/containers/products-details/products-details';
 import { ShoppingCartDetails } from './features/shopping-cart/components/containers/shopping-cart-details/shopping-cart-details';
 import { ProductsForm } from './features/products/components/containers/products-form/products-form';
-import { Login } from './features/login/components/containers/login-view/login';
+import { Login } from './features/login/components/containers/login/login';
 import { authGuard } from './core/guards/auth.guard';
 import { roleGuard } from './core/guards/role.guard';
 
