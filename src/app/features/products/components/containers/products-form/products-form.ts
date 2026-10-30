@@ -1,4 +1,4 @@
-import { Component, effect, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ProductRequest } from '../../../types/products.types';
@@ -18,6 +18,7 @@ import {
 
 @Component({
   imports: [ProductsFormView],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-products-form',
   styleUrl: './products-form.scss',
   templateUrl: './products-form.html',

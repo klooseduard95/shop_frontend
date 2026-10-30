@@ -7,11 +7,10 @@ import {
   selectIsAdmin,
   selectProductsLoading,
 } from '../../../../shared/state/app.reducers';
-import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-products-list',
-  imports: [ProductsListView, AsyncPipe],
+  imports: [ProductsListView],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './products-list.scss',
   templateUrl: './products-list.html',
@@ -19,9 +18,9 @@ import { AsyncPipe } from '@angular/common';
 export class ProductsList implements OnInit {
   private readonly store = inject(Store);
 
-  products$ = this.store.select(selectAllProducts);
-  loading$ = this.store.select(selectProductsLoading);
-  isAdmin$ = this.store.select(selectIsAdmin);
+  readonly products = this.store.selectSignal(selectAllProducts);
+  readonly loading = this.store.selectSignal(selectProductsLoading);
+  readonly isAdmin = this.store.selectSignal(selectIsAdmin);
 
   ngOnInit(): void {
     this.store.dispatch(loadProducts());
