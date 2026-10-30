@@ -1,0 +1,7 @@
+<app-products-details-view
+  [product]="product() ?? null"
+  [isAdmin]="isAdmin()"
+  (addToCart)="handleAddToCart($event)"
+  (deleteProduct)="handleDelete($event)"
+>
+</app-products-details-view>

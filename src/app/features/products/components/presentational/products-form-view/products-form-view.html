@@ -1,0 +1,52 @@
+<div class="form-container">
+  <header class="form-header">
+    <h2>{{ isEditMode() ? 'Edit product' : 'Add new product' }}</h2>
+    <p>Enter the product details for your catalogue.</p>
+  </header>
+
+  <form [formGroup]="form()" (ngSubmit)="save.emit()">
+    <mat-form-field appearance="outline">
+      <mat-label>Product name</mat-label>
+      <input matInput type="text" formControlName="name" autocomplete="off" />
+      @if (form().get('name')?.invalid && form().get('name')?.touched) {
+        <mat-error>Product name is required.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Price</mat-label>
+      <input matInput type="number" formControlName="price" min="0" step="0.01" />
+      <span matSuffix>EUR</span>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Weight</mat-label>
+      <input matInput type="number" formControlName="weight" min="0" step="0.01" />
+      <span matSuffix>kg</span>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Category ID</mat-label>
+      <input
+        matInput
+        type="text"
+        formControlName="categoryId"
+        placeholder="e.g. 123e4567-e89b-12d3-a456-426614174000"
+      />
+      @if (form().get('categoryId')?.invalid && form().get('categoryId')?.touched) {
+        <mat-error>Category ID is required.</mat-error>
+      }
+    </mat-form-field>
+
+    @if (saveError()) {
+      <p class="form-error" role="alert">{{ saveError() }}</p>
+    }
+
+    <div class="actions">
+      <button mat-button type="button" (click)="cancel.emit()">Cancel</button>
+      <button mat-flat-button type="submit" [disabled]="form().invalid || saving()">
+        {{ saving() ? 'Saving...' : 'Save product' }}
+      </button>
+    </div>
+  </form>
+</div>

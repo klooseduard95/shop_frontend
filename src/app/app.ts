@@ -1,22 +1,29 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { ProductsList } from './components/containers/products-list/products-list';
-import { ProductsDetails } from './components/containers/products-details/products-details';
-import { Product } from './features/shared/types/products.types';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { logout } from './core/state/auth/auth.actions';
 import {
-  ShoppingCartDetails
-} from './features/shopping-cart/components/containers/shopping-cart-details/shopping-cart-details';
+  selectCurrentUser,
+  selectIsAdmin,
+  selectIsAuthenticated,
+} from './core/state/auth/auth.reducer';
 
 @Component({
-  imports: [RouterOutlet, ProductsList, ProductsDetails, ShoppingCartDetails],
   selector: 'app-root',
-  styleUrl: './app.scss',
+  imports: [MatButton, RouterLink, RouterLinkActive, RouterOutlet],
   templateUrl: './app.html',
+  styleUrl: './app.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
-  selectedProduct = signal<Product | null>(null);
+  private readonly store = inject(Store);
 
-  onProductSelected(product: Product): void {
-    this.selectedProduct.set(product);
+  readonly currentUser = this.store.selectSignal(selectCurrentUser);
+  readonly isAuthenticated = this.store.selectSignal(selectIsAuthenticated);
+  readonly isAdmin = this.store.selectSignal(selectIsAdmin);
+
+  handleLogout(): void {
+    this.store.dispatch(logout());
   }
 }

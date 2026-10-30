@@ -1,5 +1,8 @@
 <app-shopping-cart-details-view
-  [cartItems]="mockCartItems"
+  [cartItems]="cartItems()"
+  [totalPrice]="cartTotal()"
+  [checkoutForm]="checkoutForm"
+  [checkoutError]="checkoutError()"
   (removeItem)="handleRemoveItem($event)"
   (checkout)="handleCheckout()">
 </app-shopping-cart-details-view>

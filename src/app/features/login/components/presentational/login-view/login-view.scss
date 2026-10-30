@@ -1,0 +1,74 @@
+:host {
+  display: block;
+  padding: clamp(1rem, 5vw, 4rem) 1rem;
+}
+
+.login-container {
+  width: min(100%, 28rem);
+  margin: 0 auto;
+  padding: clamp(1.5rem, 5vw, 2.5rem);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 1rem;
+  background: var(--mat-sys-surface-container-lowest);
+  box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 6%);
+}
+
+.login-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+
+  h2 {
+    margin: 0;
+    color: var(--mat-sys-on-surface);
+    font: var(--mat-sys-headline-small);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  p {
+    margin: 0.5rem 0 0;
+    color: var(--mat-sys-on-surface-variant);
+    font: var(--mat-sys-body-large);
+  }
+}
+
+form {
+  display: grid;
+  gap: 0.5rem;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.error {
+  margin: 0.5rem 0;
+  padding: 1rem 1.25rem;
+  color: var(--mat-sys-on-error-container);
+  background: var(--mat-sys-error-container);
+  border-radius: 0.75rem;
+  font: var(--mat-sys-body-medium);
+}
+
+button[mat-flat-button] {
+  width: 100%;
+  min-height: 3rem;
+  margin-top: 1rem;
+  border-radius: 0.75rem;
+  font-weight: 700;
+}
+
+@media (max-width: 30rem) {
+  :host {
+    padding: 0;
+  }
+
+  .login-container {
+    min-height: 100dvh;
+    padding: 2rem 1rem;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
