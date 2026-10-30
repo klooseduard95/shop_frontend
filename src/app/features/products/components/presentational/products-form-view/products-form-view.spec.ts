@@ -35,10 +35,33 @@ describe('ProductsFormView', () => {
     fixture.detectChanges();
 
     const element = fixture.nativeElement as HTMLElement;
-    const saveButton = element.querySelector<HTMLButtonElement>('.btn-save');
+    const saveButton = element.querySelector<HTMLButtonElement>('button[type="submit"]');
 
     expect(saveButton?.disabled).toBe(true);
     expect(saveButton?.textContent).toContain('Saving...');
     expect(element.textContent).toContain('Save failed');
+  });
+
+  it('should render the edit title and emit save and cancel actions', () => {
+    const save = vi.fn();
+    const cancel = vi.fn();
+    component.save.subscribe(save);
+    component.cancel.subscribe(cancel);
+    fixture.componentRef.setInput('isEditMode', true);
+    fixture.detectChanges();
+
+    const element = fixture.nativeElement as HTMLElement;
+    const cancelButton = [...element.querySelectorAll('button')].find(
+      (button) => button.textContent?.trim() === 'Cancel',
+    );
+
+    expect(element.querySelector('h2')?.textContent).toContain('Edit product');
+    element.querySelector<HTMLFormElement>('form')?.dispatchEvent(
+      new Event('submit', { bubbles: true, cancelable: true }),
+    );
+    cancelButton?.click();
+
+    expect(save).toHaveBeenCalledOnce();
+    expect(cancel).toHaveBeenCalledOnce();
   });
 });

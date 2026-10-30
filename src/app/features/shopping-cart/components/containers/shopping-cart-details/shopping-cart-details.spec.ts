@@ -77,4 +77,11 @@ describe('ShoppingCartDetails', () => {
 
     expect(store.dispatch).toHaveBeenCalledWith(checkout({ deliveryAddress }));
   });
+
+  it('should not dispatch checkout for an invalid form', () => {
+    component.handleCheckout();
+
+    expect(store.dispatch).not.toHaveBeenCalledWith(expect.objectContaining({ type: checkout.type }));
+    expect(component.checkoutForm.controls.country.touched).toBe(true);
+  });
 });

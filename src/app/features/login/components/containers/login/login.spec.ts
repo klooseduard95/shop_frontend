@@ -47,4 +47,10 @@ describe('Login', () => {
       login({ credentials: { username: 'user', password: 'password' } }),
     );
   });
+
+  it('should not dispatch login for invalid credentials', () => {
+    component.handleLogin();
+
+    expect(store.dispatch).not.toHaveBeenCalledWith(expect.objectContaining({ type: login.type }));
+  });
 });
