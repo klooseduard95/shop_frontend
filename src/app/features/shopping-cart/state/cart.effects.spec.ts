@@ -38,7 +38,7 @@ describe('CartEffects', () => {
               loading: false,
               error: null,
             },
-            cart: { items: [{ product, quantity: 2 }], loading: false, error: null },
+            cart: { items: [{ productId: product.id, quantity: 2 }], loading: false, error: null },
           },
         }),
         { provide: CartService, useValue: cartService },

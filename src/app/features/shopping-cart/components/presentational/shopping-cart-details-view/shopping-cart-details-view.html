@@ -28,7 +28,7 @@
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let item" style="text-align: right;">
-        <button mat-icon-button color="warn" (click)="removeItem.emit(item.product.id)">
+        <button mat-icon-button color="warn" (click)="removeItem.emit(item.productId)">
           <mat-icon>delete</mat-icon>
         </button>
       </td>

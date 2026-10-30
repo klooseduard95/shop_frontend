@@ -34,7 +34,7 @@ export class CartEffects {
             userId,
             deliveryAddress,
             products: items.map((item) => ({
-              productId: item.product.id,
+              productId: item.productId,
               quantity: item.quantity,
             })),
           })

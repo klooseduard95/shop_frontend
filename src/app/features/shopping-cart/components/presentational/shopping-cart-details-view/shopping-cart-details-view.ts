@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { CartItem } from '../../../types/cart.types';
+import { CartItemDetails } from '../../../types/cart.types';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import {
@@ -45,7 +45,7 @@ import { MatInput } from '@angular/material/input';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShoppingCartDetailsView {
-  cartItems = input<CartItem[]>([]);
+  cartItems = input<CartItemDetails[]>([]);
   totalPrice = input<number>(0);
   checkoutForm = input.required<FormGroup>();
   checkoutError = input<string | null>(null);

@@ -1,9 +1,8 @@
 import { CartItem } from '../features/shopping-cart/types/cart.types';
-import { createMockProduct } from './products.mock';
 
 export const createMockCartItem = (overrides?: Partial<CartItem>): CartItem => {
   return {
-    product: createMockProduct(),
+    productId: 'product-1',
     quantity: 1,
     ...overrides,
   };
@@ -11,25 +10,11 @@ export const createMockCartItem = (overrides?: Partial<CartItem>): CartItem => {
 
 export const MOCK_CART_ITEMS: CartItem[] = [
   createMockCartItem({
-    product: createMockProduct({
-      id: '1',
-      name: 'Wireless Headphones',
-      categoryName: 'Electronics',
-      categoryDescription: 'High-quality wireless headphones with noise cancellation.',
-      price: 199.99,
-      imageUrl: 'https://via.placeholder.com/150',
-    }),
+    productId: '1',
     quantity: 3,
   }),
   createMockCartItem({
-    product: createMockProduct({
-      id: '2',
-      name: 'Mechanical Keyboard',
-      categoryName: 'Peripherals',
-      categoryDescription: 'RGB mechanical keyboard with blue switches.',
-      price: 89.5,
-      imageUrl: 'https://via.placeholder.com/150',
-    }),
+    productId: '2',
     quantity: 2,
   }),
 ];

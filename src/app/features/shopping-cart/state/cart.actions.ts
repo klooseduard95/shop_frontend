@@ -1,10 +1,9 @@
 import { createAction, props } from '@ngrx/store';
-import { Product } from '../../products/types/products.types';
 import { AddressRequest } from '../types/order.types';
 
 export const addToCart = createAction(
   '[Products Details] Add To Cart',
-  props<{ product: Product }>(),
+  props<{ productId: string }>(),
 );
 export const removeFromCart = createAction(
   '[Cart Page] Remove From Cart',

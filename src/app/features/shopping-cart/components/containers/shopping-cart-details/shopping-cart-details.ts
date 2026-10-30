@@ -1,14 +1,15 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ShoppingCartDetailsView } from '../../presentational/shopping-cart-details-view/shopping-cart-details-view';
 import { AddressRequest } from '../../../types/order.types';
 import { Store } from '@ngrx/store';
 import {
   selectCartError,
-  selectCartItems,
+  selectCartItemDetails,
   selectCartTotal,
 } from '../../../state/cart.reducer';
 import { checkout, removeFromCart } from '../../../state/cart.actions';
+import { loadProducts } from '../../../../products/state/products.actions';
 
 @Component({
   selector: 'app-shopping-cart-details',
@@ -17,10 +18,10 @@ import { checkout, removeFromCart } from '../../../state/cart.actions';
   styleUrl: './shopping-cart-details.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ShoppingCartDetails {
+export class ShoppingCartDetails implements OnInit {
   private readonly store = inject(Store);
 
-  readonly cartItems = this.store.selectSignal(selectCartItems);
+  readonly cartItems = this.store.selectSignal(selectCartItemDetails);
   readonly cartTotal = this.store.selectSignal(selectCartTotal);
   readonly checkoutError = this.store.selectSignal(selectCartError);
 
@@ -30,6 +31,10 @@ export class ShoppingCartDetails {
     county: new FormControl('', { validators: [Validators.required], nonNullable: true }),
     streetAddress: new FormControl('', { validators: [Validators.required], nonNullable: true }),
   });
+
+  ngOnInit(): void {
+    this.store.dispatch(loadProducts());
+  }
 
   handleCheckout(): void {
     if (this.checkoutForm.invalid) {

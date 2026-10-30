@@ -49,7 +49,7 @@ describe('ProductsDetails', () => {
 
   it('should add the product to the cart when requested', () => {
     component.handleAddToCart(mockProduct);
-    expect(store.dispatch).toHaveBeenCalledWith(addToCart({ product: mockProduct }));
+    expect(store.dispatch).toHaveBeenCalledWith(addToCart({ productId: mockProduct.id }));
   });
 
   it('should delete the product after confirmation', () => {

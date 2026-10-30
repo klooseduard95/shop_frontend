@@ -5,18 +5,20 @@ import { ShoppingCartDetails } from './shopping-cart-details';
 import { provideMockStore } from '@ngrx/store/testing';
 import {
   selectCartError,
-  selectCartItems,
+  selectCartItemDetails,
   selectCartTotal,
 } from '../../../state/cart.reducer';
 import { Store } from '@ngrx/store';
 import { checkout, removeFromCart } from '../../../state/cart.actions';
+import { loadProducts } from '../../../../products/state/products.actions';
 import { createMockProduct } from '../../../../../mocks/products.mock';
 
 describe('ShoppingCartDetails', () => {
   let component: ShoppingCartDetails;
   let fixture: ComponentFixture<ShoppingCartDetails>;
   let store: Store;
-  const cartItems = [{ product: createMockProduct(), quantity: 2 }];
+  const product = createMockProduct();
+  const cartItems = [{ productId: product.id, product, quantity: 2 }];
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -26,8 +28,8 @@ describe('ShoppingCartDetails', () => {
         provideHttpClientTesting(),
         provideMockStore({
           selectors: [
-            { selector: selectCartItems, value: cartItems },
-            { selector: selectCartTotal, value: cartItems[0].product.price * 2 },
+            { selector: selectCartItemDetails, value: cartItems },
+            { selector: selectCartTotal, value: product.price * 2 },
             { selector: selectCartError, value: null },
           ],
         }),
@@ -38,6 +40,7 @@ describe('ShoppingCartDetails', () => {
     vi.spyOn(store, 'dispatch');
     fixture = TestBed.createComponent(ShoppingCartDetails);
     component = fixture.componentInstance;
+    fixture.detectChanges();
     await fixture.whenStable();
   });
 
@@ -49,11 +52,15 @@ describe('ShoppingCartDetails', () => {
     expect(component.cartItems()).toEqual(cartItems);
   });
 
+  it('should refresh products for current prices', () => {
+    expect(store.dispatch).toHaveBeenCalledWith(loadProducts());
+  });
+
   it('should dispatch remove from cart', () => {
-    component.handleRemoveItem(cartItems[0].product.id);
+    component.handleRemoveItem(cartItems[0].productId);
 
     expect(store.dispatch).toHaveBeenCalledWith(
-      removeFromCart({ productId: cartItems[0].product.id }),
+      removeFromCart({ productId: cartItems[0].productId }),
     );
   });
 

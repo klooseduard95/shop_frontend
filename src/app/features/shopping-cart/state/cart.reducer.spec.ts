@@ -6,23 +6,23 @@ import {
   checkoutSuccess,
   removeFromCart,
 } from './cart.actions';
-import { cartReducer, selectCartTotal } from './cart.reducer';
+import { cartReducer, selectCartItemDetails, selectCartTotal } from './cart.reducer';
 
 describe('cartReducer', () => {
   const product = createMockProduct({ price: 10 });
 
   it('should add, increment, and remove products', () => {
-    const added = cartReducer(undefined, addToCart({ product }));
-    const incremented = cartReducer(added, addToCart({ product }));
+    const added = cartReducer(undefined, addToCart({ productId: product.id }));
+    const incremented = cartReducer(added, addToCart({ productId: product.id }));
     const removed = cartReducer(incremented, removeFromCart({ productId: product.id }));
 
-    expect(added.items).toEqual([{ product, quantity: 1 }]);
-    expect(incremented.items).toEqual([{ product, quantity: 2 }]);
+    expect(added.items).toEqual([{ productId: product.id, quantity: 1 }]);
+    expect(incremented.items).toEqual([{ productId: product.id, quantity: 2 }]);
     expect(removed.items).toEqual([]);
   });
 
   it('should track checkout progress, failure, and success', () => {
-    const withItem = cartReducer(undefined, addToCart({ product }));
+    const withItem = cartReducer(undefined, addToCart({ productId: product.id }));
     const loading = cartReducer(
       withItem,
       checkout({
@@ -42,13 +42,13 @@ describe('cartReducer', () => {
     expect(completed).toMatchObject({ items: [], loading: false, error: null });
   });
 
-  it('should calculate the cart total', () => {
-    expect(
-      selectCartTotal.projector({
-        items: [{ product, quantity: 3 }],
-        loading: false,
-        error: null,
-      }),
-    ).toBe(30);
+  it('should calculate the cart total from current product data', () => {
+    const items = [{ productId: product.id, quantity: 3 }];
+    const cartItems = selectCartItemDetails.projector(items, [product]);
+
+    expect(selectCartTotal.projector(cartItems)).toBe(30);
+
+    const updatedProduct = { ...product, price: 12 };
+    expect(selectCartTotal.projector(selectCartItemDetails.projector(items, [updatedProduct]))).toBe(36);
   });
 });

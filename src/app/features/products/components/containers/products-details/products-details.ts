@@ -39,7 +39,7 @@ export class ProductsDetails {
   });
 
   handleAddToCart(product: Product): void {
-    this.store.dispatch(addToCart({ product }));
+    this.store.dispatch(addToCart({ productId: product.id }));
   }
 
   handleDelete(id: string): void {
