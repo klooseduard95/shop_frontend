@@ -1,5 +1,5 @@
 import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
-import { ProductsState } from '../../../app.state';
+import { Product } from '../types/products.types';
 import {
   createProduct,
   createProductFailure,
@@ -18,6 +18,15 @@ import {
   updateProductFailure,
   updateProductSuccess,
 } from './products.actions';
+
+export interface ProductsState {
+  items: Product[];
+  selectedProduct: Product | null;
+  loading: boolean;
+  error: string | null;
+  saving: boolean;
+  saveError: string | null;
+}
 
 const initialProductsState: ProductsState = {
   items: [],

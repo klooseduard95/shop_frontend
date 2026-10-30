@@ -1,5 +1,5 @@
-import { AuthState } from '../../../app.state';
 import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
+import { UserProfile } from '../../../features/shared/types/users.types';
 import {
   authInitialized,
   login,
@@ -10,6 +10,14 @@ import {
   restoreSessionFailure,
   restoreSessionSuccess,
 } from './auth.actions';
+
+export interface AuthState {
+  user: UserProfile | null;
+  token: string | null;
+  initialized: boolean;
+  loading: boolean;
+  error: string | null;
+}
 
 const initialAuthState: AuthState = {
   user: null,

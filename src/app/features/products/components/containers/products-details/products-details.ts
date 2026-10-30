@@ -7,7 +7,6 @@ import { Product } from '../../../types/products.types';
 import { Store } from '@ngrx/store';
 import { deleteProduct, loadProduct } from '../../../state/products.actions';
 import { addToCart } from '../../../../shopping-cart/state/cart.actions';
-import { AppState } from '../../../../../app.state';
 import { selectSelectedProduct } from '../../../state/products.reducer';
 import { selectIsAdmin } from '../../../../../core/state/auth/auth.reducer';
 
@@ -20,7 +19,7 @@ import { selectIsAdmin } from '../../../../../core/state/auth/auth.reducer';
 })
 export class ProductsDetails {
   private readonly route = inject(ActivatedRoute);
-  private readonly store = inject(Store<AppState>);
+  private readonly store = inject(Store);
 
   private readonly id = toSignal(
     this.route.paramMap.pipe(

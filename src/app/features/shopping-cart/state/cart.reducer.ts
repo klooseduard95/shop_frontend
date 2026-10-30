@@ -1,5 +1,5 @@
 import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
-import { CartState } from '../../../app.state';
+import { CartItem } from '../types/cart.types';
 import {
   addToCart,
   checkout,
@@ -7,6 +7,12 @@ import {
   checkoutSuccess,
   removeFromCart,
 } from './cart.actions';
+
+export interface CartState {
+  items: CartItem[];
+  loading: boolean;
+  error: string | null;
+}
 
 const initialCartState: CartState = { items: [], loading: false, error: null };
 

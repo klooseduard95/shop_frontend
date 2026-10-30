@@ -3,7 +3,6 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ShoppingCartDetailsView } from '../../presentational/shopping-cart-details-view/shopping-cart-details-view';
 import { AddressRequest } from '../../../types/order.types';
 import { Store } from '@ngrx/store';
-import { AppState } from '../../../../../app.state';
 import {
   selectCartError,
   selectCartItems,
@@ -19,7 +18,7 @@ import { checkout, removeFromCart } from '../../../state/cart.actions';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShoppingCartDetails {
-  private readonly store = inject(Store<AppState>);
+  private readonly store = inject(Store);
 
   readonly cartItems = this.store.selectSignal(selectCartItems);
   readonly cartTotal = this.store.selectSignal(selectCartTotal);

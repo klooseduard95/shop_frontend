@@ -2,7 +2,6 @@ import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { catchError, exhaustMap, map, of, withLatestFrom } from 'rxjs';
-import { AppState } from '../../../app.state';
 import { selectCurrentUser } from '../../../core/state/auth/auth.reducer';
 import { CartService } from '../services/cart.service';
 import { checkout, checkoutFailure, checkoutSuccess } from './cart.actions';
@@ -14,7 +13,7 @@ import { selectCartItems } from './cart.reducer';
 export class CartEffects {
   private readonly actions$ = inject(Actions);
   private readonly cartService = inject(CartService);
-  private readonly store = inject(Store<AppState>);
+  private readonly store = inject(Store);
 
   checkout$ = createEffect(() =>
     this.actions$.pipe(
