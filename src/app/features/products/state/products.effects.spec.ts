@@ -1,13 +1,10 @@
 import { TestBed } from '@angular/core/testing';
-import { Action } from '@ngrx/store';
-import { provideMockActions } from '@ngrx/effects/testing';
-import { provideMockStore } from '@ngrx/store/testing';
-import { ReplaySubject, firstValueFrom, of, throwError } from 'rxjs';
 import { Router } from '@angular/router';
-import { AppEffects } from './app.effects';
-import { AuthService } from '../../../core/services/auth.service';
-import { ProductsService } from '../../products/services/products.service';
-import { CartService } from '../../shopping-cart/services/cart.service';
+import { provideMockActions } from '@ngrx/effects/testing';
+import { Action } from '@ngrx/store';
+import { firstValueFrom, of, ReplaySubject, throwError } from 'rxjs';
+import { createMockProduct } from '../../../mocks/products.mock';
+import { ProductsService } from '../services/products.service';
 import {
   createProduct,
   createProductFailure,
@@ -15,12 +12,12 @@ import {
   updateProduct,
   updateProductFailure,
   updateProductSuccess,
-} from './app.actions';
-import { createMockProduct } from '../../../mocks/products.mock';
+} from './products.actions';
+import { ProductsEffects } from './products.effects';
 
-describe('AppEffects product saves', () => {
+describe('ProductsEffects', () => {
   let actions$: ReplaySubject<Action>;
-  let effects: AppEffects;
+  let effects: ProductsEffects;
   let productsService: {
     createProduct: ReturnType<typeof vi.fn>;
     updateProduct: ReturnType<typeof vi.fn>;
@@ -45,28 +42,14 @@ describe('AppEffects product saves', () => {
 
     TestBed.configureTestingModule({
       providers: [
-        AppEffects,
+        ProductsEffects,
         provideMockActions(() => actions$),
-        provideMockStore({
-          initialState: {
-            auth: {
-              user: null,
-              token: null,
-              initialized: true,
-              loading: false,
-              error: null,
-            },
-            cart: { items: [], loading: false, error: null },
-          },
-        }),
         { provide: ProductsService, useValue: productsService },
         { provide: Router, useValue: router },
-        { provide: AuthService, useValue: {} },
-        { provide: CartService, useValue: {} },
       ],
     });
 
-    effects = TestBed.inject(AppEffects);
+    effects = TestBed.inject(ProductsEffects);
   });
 
   it('should create a product', async () => {

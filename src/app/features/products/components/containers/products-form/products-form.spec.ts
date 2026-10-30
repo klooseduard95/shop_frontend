@@ -8,12 +8,12 @@ import {
   loadProduct,
   resetProductSaveState,
   updateProduct,
-} from '../../../../shared/state/app.actions';
+} from '../../../state/products.actions';
 import {
   selectProductSaveError,
   selectProductSaving,
   selectSelectedProduct,
-} from '../../../../shared/state/app.reducers';
+} from '../../../state/products.reducer';
 import { createMockProduct } from '../../../../../mocks/products.mock';
 
 describe('ProductsForm', () => {

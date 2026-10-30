@@ -1,14 +1,10 @@
 import { TestBed } from '@angular/core/testing';
-import { Action } from '@ngrx/store';
-import { provideMockActions } from '@ngrx/effects/testing';
-import { provideMockStore } from '@ngrx/store/testing';
-import { ReplaySubject, firstValueFrom, of, throwError } from 'rxjs';
 import { Router } from '@angular/router';
-import { ROOT_EFFECTS_INIT } from '@ngrx/effects';
-import { AppEffects } from './app.effects';
-import { AuthService } from '../../../core/services/auth.service';
-import { ProductsService } from '../../products/services/products.service';
-import { CartService } from '../../shopping-cart/services/cart.service';
+import { Actions, ROOT_EFFECTS_INIT } from '@ngrx/effects';
+import { provideMockActions } from '@ngrx/effects/testing';
+import { Action } from '@ngrx/store';
+import { firstValueFrom, of, ReplaySubject, throwError } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
 import {
   authInitialized,
   login,
@@ -18,11 +14,12 @@ import {
   restoreSession,
   restoreSessionFailure,
   restoreSessionSuccess,
-} from './app.actions';
+} from './auth.actions';
+import { AuthEffects } from './auth.effects';
 
-describe('AppEffects authentication', () => {
+describe('AuthEffects', () => {
   let actions$: ReplaySubject<Action>;
-  let effects: AppEffects;
+  let effects: AuthEffects;
   let authService: {
     getStoredToken: ReturnType<typeof vi.fn>;
     getProfile: ReturnType<typeof vi.fn>;
@@ -45,28 +42,14 @@ describe('AppEffects authentication', () => {
 
     TestBed.configureTestingModule({
       providers: [
-        AppEffects,
+        AuthEffects,
         provideMockActions(() => actions$),
-        provideMockStore({
-          initialState: {
-            auth: {
-              user: null,
-              token: null,
-              initialized: true,
-              loading: false,
-              error: null,
-            },
-            cart: { items: [], loading: false, error: null },
-          },
-        }),
         { provide: AuthService, useValue: authService },
         { provide: Router, useValue: router },
-        { provide: ProductsService, useValue: {} },
-        { provide: CartService, useValue: {} },
       ],
     });
 
-    effects = TestBed.inject(AppEffects);
+    effects = TestBed.inject(AuthEffects);
   });
 
   it('should initialize without a session when no token is stored', async () => {
@@ -132,13 +115,14 @@ describe('AppEffects authentication', () => {
   });
 
   it('should persist and navigate after login success', async () => {
-    const action = loginSuccess({
-      user: { id: '1', username: 'user', role: 'CUSTOMER' },
-      token: 'token',
-    });
     const result = firstValueFrom(effects.loginSuccess$);
 
-    actions$.next(action);
+    actions$.next(
+      loginSuccess({
+        user: { id: '1', username: 'user', role: 'CUSTOMER' },
+        token: 'token',
+      }),
+    );
     await result;
 
     expect(authService.storeToken).toHaveBeenCalledWith('token');

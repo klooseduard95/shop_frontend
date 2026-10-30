@@ -1,7 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Product, ProductRequest } from '../../products/types/products.types';
-import { LoginRequest, UserProfile } from '../types/users.types';
-import { AddressRequest } from '../../shopping-cart/types/order.types';
+import { Product, ProductRequest } from '../types/products.types';
 
 export const loadProducts = createAction('[Products Page] Load Products');
 export const loadProductsSuccess = createAction(
@@ -58,38 +56,3 @@ export const updateProductFailure = createAction(
   props<{ error: string }>(),
 );
 export const resetProductSaveState = createAction('[Product Form] Reset Save State');
-export const login = createAction('[Auth Page] Login', props<{ credentials: LoginRequest }>());
-export const restoreSession = createAction('[Auth] Restore Session', props<{ token: string }>());
-export const authInitialized = createAction('[Auth] Initialized Without Session');
-export const restoreSessionSuccess = createAction(
-  '[Auth API] Restore Session Success',
-  props<{ user: UserProfile }>(),
-);
-export const restoreSessionFailure = createAction(
-  '[Auth API] Restore Session Failure',
-  props<{ error: string }>(),
-);
-export const loginSuccess = createAction(
-  '[Auth API] Login Success',
-  props<{ user: UserProfile; token: string }>(),
-);
-export const loginFailure = createAction('[Auth API] Login Failure', props<{ error: string }>());
-export const logout = createAction('[Auth Page] Logout');
-
-export const addToCart = createAction(
-  '[Products Details] Add To Cart',
-  props<{ product: Product }>(),
-);
-export const removeFromCart = createAction(
-  '[Cart Page] Remove From Cart',
-  props<{ productId: string }>(),
-);
-export const checkout = createAction(
-  '[Cart Page] Checkout',
-  props<{ deliveryAddress: AddressRequest }>(),
-);
-export const checkoutSuccess = createAction('[Cart API] Checkout Success');
-export const checkoutFailure = createAction(
-  '[Cart API] Checkout Failure',
-  props<{ error: string }>(),
-);

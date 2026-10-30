@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Login } from './login';
 import { provideMockStore } from '@ngrx/store/testing';
 import { Store } from '@ngrx/store';
-import { login } from '../../../../shared/state/app.actions';
+import { login } from '../../../../../core/state/auth/auth.actions';
 
 describe('Login', () => {
   let component: Login;

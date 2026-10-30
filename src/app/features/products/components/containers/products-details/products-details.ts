@@ -5,9 +5,11 @@ import { filter, map } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Product } from '../../../types/products.types';
 import { Store } from '@ngrx/store';
-import { addToCart, deleteProduct, loadProduct } from '../../../../shared/state/app.actions';
+import { deleteProduct, loadProduct } from '../../../state/products.actions';
+import { addToCart } from '../../../../shopping-cart/state/cart.actions';
 import { AppState } from '../../../../../app.state';
-import { selectIsAdmin, selectSelectedProduct } from '../../../../shared/state/app.reducers';
+import { selectSelectedProduct } from '../../../state/products.reducer';
+import { selectIsAdmin } from '../../../../../core/state/auth/auth.reducer';
 
 @Component({
   selector: 'app-products-details',

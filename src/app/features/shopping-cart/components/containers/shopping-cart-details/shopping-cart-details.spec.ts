@@ -7,9 +7,9 @@ import {
   selectCartError,
   selectCartItems,
   selectCartTotal,
-} from '../../../../shared/state/app.reducers';
+} from '../../../state/cart.reducer';
 import { Store } from '@ngrx/store';
-import { checkout, removeFromCart } from '../../../../shared/state/app.actions';
+import { checkout, removeFromCart } from '../../../state/cart.actions';
 import { createMockProduct } from '../../../../../mocks/products.mock';
 
 describe('ShoppingCartDetails', () => {

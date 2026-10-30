@@ -1,12 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { ProductsListView } from '../../presentational/products-list-view/products-list-view';
 import { Store } from '@ngrx/store';
-import { deleteProduct, loadProducts } from '../../../../shared/state/app.actions';
-import {
-  selectAllProducts,
-  selectIsAdmin,
-  selectProductsLoading,
-} from '../../../../shared/state/app.reducers';
+import { deleteProduct, loadProducts } from '../../../state/products.actions';
+import { selectAllProducts, selectProductsLoading } from '../../../state/products.reducer';
+import { selectIsAdmin } from '../../../../../core/state/auth/auth.reducer';
 
 @Component({
   selector: 'app-products-list',

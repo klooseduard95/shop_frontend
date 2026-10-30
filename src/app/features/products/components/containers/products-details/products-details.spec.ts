@@ -5,9 +5,11 @@ import { of } from 'rxjs';
 import { ProductsDetails } from './products-details';
 import { createMockProduct } from '../../../../../mocks/products.mock';
 import { provideMockStore } from '@ngrx/store/testing';
-import { selectIsAdmin, selectSelectedProduct } from '../../../../shared/state/app.reducers';
+import { selectSelectedProduct } from '../../../state/products.reducer';
+import { selectIsAdmin } from '../../../../../core/state/auth/auth.reducer';
 import { Store } from '@ngrx/store';
-import { addToCart, deleteProduct, loadProduct } from '../../../../shared/state/app.actions';
+import { deleteProduct, loadProduct } from '../../../state/products.actions';
+import { addToCart } from '../../../../shopping-cart/state/cart.actions';
 
 describe('ProductsDetails', () => {
   let component: ProductsDetails;

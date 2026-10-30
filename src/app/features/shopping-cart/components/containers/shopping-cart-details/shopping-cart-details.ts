@@ -8,8 +8,8 @@ import {
   selectCartError,
   selectCartItems,
   selectCartTotal,
-} from '../../../../shared/state/app.reducers';
-import { checkout, removeFromCart } from '../../../../shared/state/app.actions';
+} from '../../../state/cart.reducer';
+import { checkout, removeFromCart } from '../../../state/cart.actions';
 
 @Component({
   selector: 'app-shopping-cart-details',
