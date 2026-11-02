@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ProductsFormView } from './products-form-view';
 
 describe('ProductsFormView', () => {
@@ -16,10 +16,20 @@ describe('ProductsFormView', () => {
     fixture.componentRef.setInput(
       'form',
       new FormGroup({
-        name: new FormControl('Product'),
-        price: new FormControl(1),
-        weight: new FormControl(1),
-        categoryId: new FormControl('category'),
+        name: new FormControl('Product', {
+          nonNullable: true,
+          validators: [Validators.required],
+        }),
+        price: new FormControl(1, {
+          nonNullable: true,
+        }),
+        weight: new FormControl(1, {
+          nonNullable: true,
+        }),
+        categoryId: new FormControl('category', {
+          nonNullable: true,
+          validators: [Validators.required],
+        }),
       }),
     );
     await fixture.whenStable();
@@ -56,12 +66,29 @@ describe('ProductsFormView', () => {
     );
 
     expect(element.querySelector('h2')?.textContent).toContain('Edit product');
-    element.querySelector<HTMLFormElement>('form')?.dispatchEvent(
-      new Event('submit', { bubbles: true, cancelable: true }),
-    );
+    element
+      .querySelector<HTMLFormElement>('form')
+      ?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
     cancelButton?.click();
 
     expect(save).toHaveBeenCalledOnce();
     expect(cancel).toHaveBeenCalledOnce();
+  });
+
+  it('should render required errors for touched invalid fields', () => {
+    const form = component.form();
+
+    form.controls.name.setValue('');
+    form.controls.name.markAsTouched();
+
+    form.controls.categoryId.setValue('');
+    form.controls.categoryId.markAsTouched();
+
+    fixture.detectChanges();
+
+    const text = (fixture.nativeElement as HTMLElement).textContent;
+
+    expect(text).toContain('Product name is required.');
+    expect(text).toContain('Category ID is required.');
   });
 });

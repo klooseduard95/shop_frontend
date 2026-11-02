@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ShoppingCartDetailsView } from './shopping-cart-details-view';
 import { createMockProduct } from '../../../../../mocks/products.mock';
 
@@ -17,10 +17,22 @@ describe('ShoppingCartDetailsView', () => {
     fixture.componentRef.setInput(
       'checkoutForm',
       new FormGroup({
-        country: new FormControl(''),
-        city: new FormControl(''),
-        county: new FormControl(''),
-        streetAddress: new FormControl(''),
+        country: new FormControl('', {
+          nonNullable: true,
+          validators: [Validators.required],
+        }),
+        city: new FormControl('', {
+          nonNullable: true,
+          validators: [Validators.required],
+        }),
+        county: new FormControl('', {
+          nonNullable: true,
+          validators: [Validators.required],
+        }),
+        streetAddress: new FormControl('', {
+          nonNullable: true,
+          validators: [Validators.required],
+        }),
       }),
     );
     await fixture.whenStable();
@@ -72,10 +84,31 @@ describe('ShoppingCartDetailsView', () => {
     fixture.detectChanges();
 
     const element = fixture.nativeElement as HTMLElement;
-    element.querySelector<HTMLFormElement>('#checkout-form')?.dispatchEvent(
-      new Event('submit', { bubbles: true, cancelable: true }),
-    );
+    element
+      .querySelector<HTMLFormElement>('#checkout-form')
+      ?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
 
     expect(checkout).toHaveBeenCalledOnce();
+  });
+
+  it('should render validation and checkout errors', () => {
+    const form = component.checkoutForm();
+
+    form.controls['country'].markAsTouched();
+    form.controls['city'].markAsTouched();
+    form.controls['county'].markAsTouched();
+    form.controls['streetAddress'].markAsTouched();
+
+    fixture.componentRef.setInput('checkoutError', 'Checkout failed');
+
+    fixture.detectChanges();
+
+    const text = (fixture.nativeElement as HTMLElement).textContent;
+
+    expect(text).toContain('Country is required.');
+    expect(text).toContain('City is required.');
+    expect(text).toContain('County is required.');
+    expect(text).toContain('Street address is required.');
+    expect(text).toContain('Checkout failed');
   });
 });

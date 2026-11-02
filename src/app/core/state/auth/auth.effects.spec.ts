@@ -14,6 +14,7 @@ import {
   restoreSession,
   restoreSessionFailure,
   restoreSessionSuccess,
+  sessionClearedInAnotherTab,
 } from './auth.actions';
 import { AuthEffects } from './auth.effects';
 
@@ -244,4 +245,178 @@ describe('AuthEffects', () => {
     expect(authService.clearStoredToken).toHaveBeenCalled();
     expect(router.navigate).toHaveBeenCalledWith(['/login']);
   });
+
+  it('should restore a session added in another tab', async () => {
+    const result = firstValueFrom(effects.syncSessionBetweenTabs$);
+
+    window.dispatchEvent(
+      new StorageEvent('storage', {
+        key: AuthService.tokenStorageKey,
+        newValue: 'other-tab-token',
+        storageArea: localStorage,
+      }),
+    );
+
+    await expect(result).resolves.toEqual(
+      restoreSession({
+        token: 'other-tab-token',
+      }),
+    );
+  });
+
+  it('should clear a session removed in another tab', async () => {
+    router.url = '/products/123';
+
+    const result = firstValueFrom(effects.syncSessionBetweenTabs$);
+
+    window.dispatchEvent(
+      new StorageEvent('storage', {
+        key: AuthService.tokenStorageKey,
+        newValue: null,
+        storageArea: localStorage,
+      }),
+    );
+
+    await expect(result).resolves.toEqual(
+      sessionClearedInAnotherTab({
+        returnUrl: '/products/123',
+      }),
+    );
+  });
+
+  it('should use products as the cross-tab logout return URL on the login page', async () => {
+    router.url = '/login?returnUrl=%2Fproducts%2F123';
+
+    const result = firstValueFrom(effects.syncSessionBetweenTabs$);
+
+    window.dispatchEvent(
+      new StorageEvent('storage', {
+        key: AuthService.tokenStorageKey,
+        newValue: null,
+        storageArea: localStorage,
+      }),
+    );
+
+    await expect(result).resolves.toEqual(
+      sessionClearedInAnotherTab({
+        returnUrl: '/products',
+      }),
+    );
+  });
+
+  it('should use products for an unsafe current URL', async () => {
+    router.url = '//malicious.example';
+
+    const result = firstValueFrom(effects.syncSessionBetweenTabs$);
+
+    window.dispatchEvent(
+      new StorageEvent('storage', {
+        key: AuthService.tokenStorageKey,
+        newValue: null,
+        storageArea: localStorage,
+      }),
+    );
+
+    await expect(result).resolves.toEqual(
+      sessionClearedInAnotherTab({
+        returnUrl: '/products',
+      }),
+    );
+  });
+
+  it('should navigate away from login after session restoration', async () => {
+    router.url = '/login';
+    router.parseUrl.mockReturnValue({
+      queryParamMap: {
+        get: vi.fn().mockReturnValue('/shopping-cart'),
+      },
+    });
+
+    const result = firstValueFrom(effects.navigateAfterSessionRestore$);
+
+    actions$.next(
+      restoreSessionSuccess({
+        user: {
+          id: '1',
+          username: 'user',
+          role: 'CUSTOMER',
+        },
+      }),
+    );
+
+    await result;
+
+    expect(router.navigateByUrl).toHaveBeenCalledWith('/shopping-cart');
+  });
+
+  it('should not navigate after restoration outside the login page', () => {
+    router.url = '/products';
+
+    const navigateByUrl = vi.fn();
+    router.navigateByUrl = navigateByUrl;
+
+    const emitted = vi.fn();
+    const subscription = effects.navigateAfterSessionRestore$.subscribe(emitted);
+
+    actions$.next(
+      restoreSessionSuccess({
+        user: {
+          id: '1',
+          username: 'user',
+          role: 'CUSTOMER',
+        },
+      }),
+    );
+
+    expect(emitted).not.toHaveBeenCalled();
+    expect(navigateByUrl).not.toHaveBeenCalled();
+
+    subscription.unsubscribe();
+  });
+
+  it('should navigate to login after another tab clears the session', async () => {
+    const result = firstValueFrom(effects.navigateAfterCrossTabLogout$);
+
+    actions$.next(
+      sessionClearedInAnotherTab({
+        returnUrl: '/shopping-cart',
+      }),
+    );
+
+    await result;
+
+    expect(router.navigate).toHaveBeenCalledWith(['/login'], {
+      queryParams: {
+        returnUrl: '/shopping-cart',
+      },
+    });
+  });
+
+  it.each(['products', '/login', '/login?returnUrl=%2Fproducts'])(
+    'should reject the unsafe return URL "%s"',
+    async (returnUrl) => {
+      router.parseUrl.mockReturnValue({
+        queryParamMap: {
+          get: vi.fn().mockReturnValue(returnUrl),
+        },
+      });
+
+      const result = firstValueFrom(effects.loginSuccess$);
+
+      actions$.next(
+        loginSuccess({
+          user: {
+            id: '1',
+            username: 'user',
+            role: 'CUSTOMER',
+          },
+          token: 'token',
+        }),
+      );
+
+      await result;
+
+      expect(router.navigateByUrl).toHaveBeenCalledWith('/products');
+    },
+  );
 });

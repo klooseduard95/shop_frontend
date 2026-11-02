@@ -12,6 +12,8 @@ import { Store } from '@ngrx/store';
 import { checkout, removeFromCart } from '../../../state/cart.actions';
 import { loadProducts } from '../../../../products/state/products.actions';
 import { createMockProduct } from '../../../../../mocks/products.mock';
+import { ShoppingCartDetailsView } from '../../presentational/shopping-cart-details-view/shopping-cart-details-view';
+import { By } from '@angular/platform-browser';
 
 describe('ShoppingCartDetails', () => {
   let component: ShoppingCartDetails;
@@ -81,7 +83,44 @@ describe('ShoppingCartDetails', () => {
   it('should not dispatch checkout for an invalid form', () => {
     component.handleCheckout();
 
-    expect(store.dispatch).not.toHaveBeenCalledWith(expect.objectContaining({ type: checkout.type }));
+    expect(store.dispatch).not.toHaveBeenCalledWith(
+      expect.objectContaining({ type: checkout.type }),
+    );
     expect(component.checkoutForm.controls.country.touched).toBe(true);
+  });
+
+  it('should handle remove events emitted by the cart view', () => {
+    const view = fixture.debugElement.query(By.directive(ShoppingCartDetailsView))
+      .componentInstance as ShoppingCartDetailsView;
+
+    view.removeItem.emit(cartItems[0].productId);
+
+    expect(store.dispatch).toHaveBeenCalledWith(
+      removeFromCart({
+        productId: cartItems[0].productId,
+      }),
+    );
+  });
+
+  it('should handle checkout events emitted by the cart view', () => {
+    const deliveryAddress = {
+      country: 'Romania',
+      city: 'Cluj-Napoca',
+      county: 'Cluj',
+      streetAddress: 'Main Street 1',
+    };
+
+    component.checkoutForm.setValue(deliveryAddress);
+
+    const view = fixture.debugElement.query(By.directive(ShoppingCartDetailsView))
+      .componentInstance as ShoppingCartDetailsView;
+
+    view.checkout.emit();
+
+    expect(store.dispatch).toHaveBeenCalledWith(
+      checkout({
+        deliveryAddress,
+      }),
+    );
   });
 });

@@ -3,6 +3,8 @@ import { Login } from './login';
 import { provideMockStore } from '@ngrx/store/testing';
 import { Store } from '@ngrx/store';
 import { login } from '../../../../../core/state/auth/auth.actions';
+import { By } from '@angular/platform-browser';
+import { LoginView } from '../../presentational/login-view/login-view';
 
 describe('Login', () => {
   let component: Login;
@@ -52,5 +54,25 @@ describe('Login', () => {
     component.handleLogin();
 
     expect(store.dispatch).not.toHaveBeenCalledWith(expect.objectContaining({ type: login.type }));
+  });
+
+  it('should handle login emitted by the view', () => {
+    component.loginForm.setValue({
+      username: 'user',
+      password: 'password',
+    });
+
+    const view = fixture.debugElement.query(By.directive(LoginView)).componentInstance as LoginView;
+
+    view.submitLogin.emit();
+
+    expect(store.dispatch).toHaveBeenCalledWith(
+      login({
+        credentials: {
+          username: 'user',
+          password: 'password',
+        },
+      }),
+    );
   });
 });

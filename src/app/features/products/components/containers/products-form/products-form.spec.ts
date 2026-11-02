@@ -1,8 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { of } from 'rxjs';
-import { ProductsForm } from './products-form';
+import { createMockProduct } from '../../../../../mocks/products.mock';
 import {
   createProduct,
   loadProduct,
@@ -14,34 +15,63 @@ import {
   selectProductSaving,
   selectSelectedProduct,
 } from '../../../state/products.reducer';
-import { createMockProduct } from '../../../../../mocks/products.mock';
+import { ProductsFormView } from '../../presentational/products-form-view/products-form-view';
+import { ProductsForm } from './products-form';
 
 describe('ProductsForm', () => {
   let component: ProductsForm;
   let fixture: ComponentFixture<ProductsForm>;
   let store: MockStore;
-  let router: { navigate: ReturnType<typeof vi.fn> };
+  let router: {
+    navigate: ReturnType<typeof vi.fn>;
+  };
   let routeId: string | null;
 
-  const product = createMockProduct({ id: 'product-1', name: 'Loaded product' });
+  const product = createMockProduct({
+    id: 'product-1',
+    name: 'Loaded product',
+  });
 
   async function configure(): Promise<void> {
-    router = { navigate: vi.fn().mockResolvedValue(true) };
+    router = {
+      navigate: vi.fn().mockResolvedValue(true),
+    };
+
     await TestBed.configureTestingModule({
       imports: [ProductsForm],
       providers: [
         {
           provide: ActivatedRoute,
           useValue: {
-            paramMap: of(convertToParamMap(routeId ? { id: routeId } : {})),
+            paramMap: of(
+              convertToParamMap(
+                routeId
+                  ? {
+                      id: routeId,
+                    }
+                  : {},
+              ),
+            ),
           },
         },
-        { provide: Router, useValue: router },
+        {
+          provide: Router,
+          useValue: router,
+        },
         provideMockStore({
           selectors: [
-            { selector: selectSelectedProduct, value: null },
-            { selector: selectProductSaving, value: false },
-            { selector: selectProductSaveError, value: null },
+            {
+              selector: selectSelectedProduct,
+              value: null,
+            },
+            {
+              selector: selectProductSaving,
+              value: false,
+            },
+            {
+              selector: selectProductSaveError,
+              value: null,
+            },
           ],
         }),
       ],
@@ -49,8 +79,10 @@ describe('ProductsForm', () => {
 
     store = TestBed.inject(MockStore);
     vi.spyOn(store, 'dispatch');
+
     fixture = TestBed.createComponent(ProductsForm);
     component = fixture.componentInstance;
+
     fixture.detectChanges();
     await fixture.whenStable();
   }
@@ -94,12 +126,56 @@ describe('ProductsForm', () => {
       component.handleSave();
 
       expect(store.dispatch).not.toHaveBeenCalledWith(
-        expect.objectContaining({ type: createProduct.type }),
+        expect.objectContaining({
+          type: createProduct.type,
+        }),
       );
       expect(store.dispatch).not.toHaveBeenCalledWith(
-        expect.objectContaining({ type: updateProduct.type }),
+        expect.objectContaining({
+          type: updateProduct.type,
+        }),
       );
       expect(component.productForm.controls.name.touched).toBe(true);
+    });
+
+    it('should handle save emitted by the form view', () => {
+      component.productForm.setValue({
+        name: 'New product',
+        price: 10,
+        weight: 2,
+        categoryId: 'category-1',
+      });
+
+      const viewDebugElement = fixture.debugElement.query(By.directive(ProductsFormView));
+
+      expect(viewDebugElement).not.toBeNull();
+
+      const view = viewDebugElement.componentInstance as ProductsFormView;
+
+      view.save.emit();
+
+      expect(store.dispatch).toHaveBeenCalledWith(
+        createProduct({
+          product: {
+            name: 'New product',
+            price: 10,
+            weight: 2,
+            categoryId: 'category-1',
+          },
+        }),
+      );
+    });
+
+    it('should handle cancel emitted by the form view', () => {
+      const viewDebugElement = fixture.debugElement.query(By.directive(ProductsFormView));
+
+      expect(viewDebugElement).not.toBeNull();
+
+      const view = viewDebugElement.componentInstance as ProductsFormView;
+
+      view.cancel.emit();
+
+      expect(router.navigate).toHaveBeenCalledWith(['/products']);
     });
   });
 
@@ -110,10 +186,16 @@ describe('ProductsForm', () => {
     });
 
     it('should load and hydrate the matching product', async () => {
-      expect(store.dispatch).toHaveBeenCalledWith(loadProduct({ id: product.id }));
+      expect(store.dispatch).toHaveBeenCalledWith(
+        loadProduct({
+          id: product.id,
+        }),
+      );
 
       store.overrideSelector(selectSelectedProduct, product);
       store.refreshState();
+
+      fixture.detectChanges();
       await fixture.whenStable();
 
       expect(component.productForm.getRawValue()).toEqual({
@@ -126,8 +208,16 @@ describe('ProductsForm', () => {
 
     it('should ignore a selected product for a different route', async () => {
       const originalValue = component.productForm.getRawValue();
-      store.overrideSelector(selectSelectedProduct, createMockProduct({ id: 'different-product' }));
+
+      store.overrideSelector(
+        selectSelectedProduct,
+        createMockProduct({
+          id: 'different-product',
+        }),
+      );
       store.refreshState();
+
+      fixture.detectChanges();
       await fixture.whenStable();
 
       expect(component.productForm.getRawValue()).toEqual(originalValue);
@@ -155,14 +245,47 @@ describe('ProductsForm', () => {
         }),
       );
     });
+
+    it('should handle save emitted by the form view', () => {
+      component.productForm.setValue({
+        name: 'Updated product',
+        price: 20,
+        weight: 3,
+        categoryId: 'category-2',
+      });
+
+      const viewDebugElement = fixture.debugElement.query(By.directive(ProductsFormView));
+
+      expect(viewDebugElement).not.toBeNull();
+
+      const view = viewDebugElement.componentInstance as ProductsFormView;
+
+      view.save.emit();
+
+      expect(store.dispatch).toHaveBeenCalledWith(
+        updateProduct({
+          id: product.id,
+          product: {
+            name: 'Updated product',
+            price: 20,
+            weight: 3,
+            categoryId: 'category-2',
+          },
+        }),
+      );
+    });
   });
 
-  it('should navigate directly when cancelled', async () => {
-    routeId = null;
-    await configure();
+  describe('cancel', () => {
+    beforeEach(async () => {
+      routeId = null;
+      await configure();
+    });
 
-    await component.handleCancel();
+    it('should navigate directly when cancelled', async () => {
+      await component.handleCancel();
 
-    expect(router.navigate).toHaveBeenCalledWith(['/products']);
+      expect(router.navigate).toHaveBeenCalledWith(['/products']);
+    });
   });
 });

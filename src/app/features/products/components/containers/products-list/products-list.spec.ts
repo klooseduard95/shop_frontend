@@ -4,6 +4,9 @@ import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { Store } from '@ngrx/store';
 import { deleteProduct, loadProducts } from '../../../state/products.actions';
 import { createMockProduct } from '../../../../../mocks/products.mock';
+import { selectProductsLoading } from '../../../state/products.reducer';
+import { By } from '@angular/platform-browser';
+import { ProductsListView } from '../../presentational/products-list-view/products-list-view';
 
 describe('ProductsList', () => {
   let component: ProductsList;
@@ -60,5 +63,29 @@ describe('ProductsList', () => {
     component.handleDelete('product-1');
 
     expect(store.dispatch).not.toHaveBeenCalledWith(deleteProduct({ id: 'product-1' }));
+  });
+
+  it('should render the loading message while products are loading', () => {
+    store.overrideSelector(selectProductsLoading, true);
+    store.refreshState();
+    fixture.detectChanges();
+
+    expect((fixture.nativeElement as HTMLElement).textContent).toContain('Loading products...');
+  });
+
+  it('should handle deletion emitted by the products view', () => {
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+    const product = createMockProduct();
+
+    const view = fixture.debugElement.query(By.directive(ProductsListView))
+      .componentInstance as ProductsListView;
+
+    view.deleteProduct.emit(product.id);
+
+    expect(store.dispatch).toHaveBeenCalledWith(
+      deleteProduct({
+        id: product.id,
+      }),
+    );
   });
 });
