@@ -8,3 +8,15 @@ export interface CartItem {
 export interface CartItemDetails extends CartItem {
   product: Product;
 }
+
+export interface PersistedCart {
+  items: CartItem[];
+  revision: number;
+  updatedAt: number;
+  writerId: string;
+}
+
+export interface CartStorageChange {
+  ownerKey: string | null;
+  cart: PersistedCart | null;
+}
