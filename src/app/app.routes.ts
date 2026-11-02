@@ -6,6 +6,7 @@ import { ProductsForm } from './features/products/components/containers/products
 import { Login } from './features/login/components/containers/login/login';
 import { authGuard } from './core/guards/auth.guard';
 import { roleGuard } from './core/guards/role.guard';
+import { NotFound } from './features/not-found/components/containers/not-found/not-found';
 
 export const routes: Routes = [
   {
@@ -43,5 +44,9 @@ export const routes: Routes = [
     path: 'cart',
     component: ShoppingCartDetails,
     canActivate: [authGuard],
+  },
+  {
+    path: '**',
+    component: NotFound,
   },
 ];

@@ -32,35 +32,50 @@ describe('auth guards', () => {
     TestBed.configureTestingModule({
       providers: [provideRouter([]), provideMockStore({ initialState: state(null) })],
     });
+
     store = TestBed.inject(MockStore);
     router = TestBed.inject(Router);
   });
 
   it('should wait for initialization before allowing an authenticated user', async () => {
     store.setState(state(null, false));
+
     const result = firstValueFrom(
       TestBed.runInInjectionContext(() =>
-        authGuard({} as ActivatedRouteSnapshot, {} as RouterStateSnapshot),
+        authGuard({} as ActivatedRouteSnapshot, { url: '/products/123' } as RouterStateSnapshot),
       ) as Observable<boolean | UrlTree>,
     );
 
-    store.setState(state({ id: '1', username: 'admin', role: 'ADMIN' }));
+    store.setState(
+      state({
+        id: '1',
+        username: 'admin',
+        role: 'ADMIN',
+      }),
+    );
 
     await expect(result).resolves.toBe(true);
   });
 
-  it('should redirect a signed-out user to login', async () => {
+  it('should redirect a signed-out user to login with the attempted URL', async () => {
     const result = await firstValueFrom(
       TestBed.runInInjectionContext(() =>
-        authGuard({} as ActivatedRouteSnapshot, {} as RouterStateSnapshot),
+        authGuard({} as ActivatedRouteSnapshot, { url: '/products/123' } as RouterStateSnapshot),
       ) as Observable<boolean | UrlTree>,
     );
 
-    expect(router.serializeUrl(result as UrlTree)).toBe('/login');
+    expect(router.serializeUrl(result as UrlTree)).toBe('/login?returnUrl=%2Fproducts%2F123');
   });
 
   it('should enforce the expected role', async () => {
-    store.setState(state({ id: '1', username: 'customer', role: 'CUSTOMER' }));
+    store.setState(
+      state({
+        id: '1',
+        username: 'customer',
+        role: 'CUSTOMER',
+      }),
+    );
+
     const result = await firstValueFrom(
       TestBed.runInInjectionContext(() =>
         roleGuard(
@@ -74,7 +89,14 @@ describe('auth guards', () => {
   });
 
   it('should allow a user with the expected role', async () => {
-    store.setState(state({ id: '1', username: 'admin', role: 'ADMIN' }));
+    store.setState(
+      state({
+        id: '1',
+        username: 'admin',
+        role: 'ADMIN',
+      }),
+    );
+
     const result = await firstValueFrom(
       TestBed.runInInjectionContext(() =>
         roleGuard(

@@ -9,6 +9,7 @@ import {
   restoreSession,
   restoreSessionFailure,
   restoreSessionSuccess,
+  sessionClearedInAnotherTab,
 } from './auth.actions';
 
 export interface AuthState {
@@ -36,7 +37,13 @@ export const authReducer = createReducer(
     loading: true,
     error: null,
   })),
-  on(authInitialized, (state) => ({ ...state, initialized: true, loading: false })),
+
+  on(authInitialized, (state) => ({
+    ...state,
+    initialized: true,
+    loading: false,
+  })),
+
   on(restoreSessionSuccess, (state, { user }) => ({
     ...state,
     user,
@@ -49,7 +56,13 @@ export const authReducer = createReducer(
     initialized: true,
     error,
   })),
-  on(login, (state) => ({ ...state, loading: true, error: null })),
+
+  on(login, (state) => ({
+    ...state,
+    loading: true,
+    error: null,
+  })),
+
   on(loginSuccess, (state, { user, token }) => ({
     ...state,
     user,
@@ -58,8 +71,17 @@ export const authReducer = createReducer(
     loading: false,
     error: null,
   })),
-  on(loginFailure, (state, { error }) => ({ ...state, error, loading: false })),
-  on(logout, () => ({ ...initialAuthState, initialized: true })),
+
+  on(loginFailure, (state, { error }) => ({
+    ...state,
+    error,
+    loading: false,
+  })),
+
+  on(logout, sessionClearedInAnotherTab, () => ({
+    ...initialAuthState,
+    initialized: true,
+  })),
 );
 
 export const selectAuthState = createFeatureSelector<AuthState>('auth');

@@ -1,0 +1,42 @@
+:host {
+  display: grid;
+  min-height: min(42rem, calc(100dvh - 10.5rem));
+  padding: clamp(2rem, 8vw, 6rem) 1rem;
+  place-items: center;
+}
+
+.not-found {
+  width: min(100%, 36rem);
+  text-align: center;
+}
+
+.status-code {
+  margin: 0;
+  color: var(--mat-sys-primary);
+  font: var(--mat-sys-display-large);
+  font-size: clamp(5rem, 18vw, 9rem);
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.06em;
+}
+
+h1 {
+  margin: 1.5rem 0 0;
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-headline-large);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.description {
+  margin: 0.75rem auto 2rem;
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-body-large);
+}
+
+a[mat-flat-button] {
+  min-height: 3rem;
+  padding-inline: 1.5rem;
+  border-radius: 0.75rem;
+  font-weight: 700;
+}

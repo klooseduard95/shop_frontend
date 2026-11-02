@@ -18,3 +18,7 @@ export const loginSuccess = createAction(
 );
 export const loginFailure = createAction('[Auth API] Login Failure', props<{ error: string }>());
 export const logout = createAction('[Auth Page] Logout');
+export const sessionClearedInAnotherTab = createAction(
+  '[Auth Storage] Session Cleared In Another Tab',
+  props<{ returnUrl: string }>(),
+);
