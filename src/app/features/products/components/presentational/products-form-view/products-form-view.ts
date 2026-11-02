@@ -1,9 +1,15 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatError, MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
-
 import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
+
+export type ProductForm = FormGroup<{
+  name: FormControl<string>;
+  price: FormControl<number>;
+  weight: FormControl<number>;
+  categoryId: FormControl<string>;
+}>;
 
 @Component({
   selector: 'app-products-form-view',
@@ -13,7 +19,7 @@ import { MatButton } from '@angular/material/button';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductsFormView {
-  form = input.required<FormGroup>();
+  form = input.required<ProductForm>();
   isEditMode = input<boolean>(false);
   saving = input(false);
   saveError = input<string | null>(null);
