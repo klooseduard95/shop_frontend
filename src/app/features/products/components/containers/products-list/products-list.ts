@@ -3,7 +3,7 @@ import { ProductsListView } from '../../presentational/products-list-view/produc
 import { Store } from '@ngrx/store';
 import { deleteProduct, loadProducts } from '../../../state/products.actions';
 import { selectAllProducts, selectProductsLoading } from '../../../state/products.reducer';
-import { selectIsAdmin } from '../../../../../core/state/auth/auth.reducer';
+import { selectIsAdmin } from '../../../../auth/state/auth.reducer';
 
 @Component({
   selector: 'app-products-list',

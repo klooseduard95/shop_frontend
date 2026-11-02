@@ -2,7 +2,7 @@ import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { logout } from '../state/auth/auth.actions';
+import { logout } from '../../features/auth/state/auth.actions';
 import { errorInterceptor } from './error.interceptor';
 
 describe('errorInterceptor', () => {

@@ -9,8 +9,8 @@ import {
   restoreSessionFailure,
   restoreSessionSuccess,
   sessionClearedInAnotherTab,
-} from '../../../core/state/auth/auth.actions';
-import { selectCurrentUser } from '../../../core/state/auth/auth.reducer';
+} from '../../auth/state/auth.actions';
+import { selectCurrentUser } from '../../auth/state/auth.reducer';
 import { UserProfile } from '../../shared/types/users.types';
 import { CartStorageService } from '../services/cart-storage.service';
 import { CartService } from '../services/cart.service';

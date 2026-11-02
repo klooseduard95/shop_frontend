@@ -2,12 +2,12 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { logout } from './core/state/auth/auth.actions';
+import { logout } from './features/auth/state/auth.actions';
 import {
   selectCurrentUser,
   selectIsAdmin,
   selectIsAuthenticated,
-} from './core/state/auth/auth.reducer';
+} from './features/auth/state/auth.reducer';
 
 @Component({
   selector: 'app-root',

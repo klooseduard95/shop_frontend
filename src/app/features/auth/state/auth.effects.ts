@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, createEffect, ofType, ROOT_EFFECTS_INIT } from '@ngrx/effects';
 import { catchError, exhaustMap, filter, fromEvent, map, of, switchMap, tap } from 'rxjs';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../services/auth.service';
 import {
   authInitialized,
   login,

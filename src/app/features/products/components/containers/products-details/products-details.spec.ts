@@ -5,7 +5,7 @@ import { ProductsDetails } from './products-details';
 import { createMockProduct } from '../../../../../mocks/products.mock';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { selectSelectedProduct } from '../../../state/products.reducer';
-import { selectIsAdmin } from '../../../../../core/state/auth/auth.reducer';
+import { selectIsAdmin } from '../../../../auth/state/auth.reducer';
 import { Store } from '@ngrx/store';
 import { deleteProduct, loadProduct } from '../../../state/products.actions';
 import { addToCart } from '../../../../shopping-cart/state/cart.actions';

@@ -3,7 +3,7 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { Action } from '@ngrx/store';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { firstValueFrom, of, ReplaySubject, Subject, throwError } from 'rxjs';
-import { authInitialized, loginSuccess, logout } from '../../../core/state/auth/auth.actions';
+import { authInitialized, loginSuccess, logout } from '../../auth/state/auth.actions';
 import { createMockProduct } from '../../../mocks/products.mock';
 import { CartStorageService } from '../services/cart-storage.service';
 import { CartService } from '../services/cart.service';

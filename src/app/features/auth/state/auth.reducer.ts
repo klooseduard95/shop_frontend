@@ -1,5 +1,5 @@
 import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
-import { UserProfile } from '../../../features/shared/types/users.types';
+import { UserProfile } from '../../shared/types/users.types';
 import {
   authInitialized,
   login,

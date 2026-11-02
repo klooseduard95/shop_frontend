@@ -2,7 +2,7 @@ import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { catchError, throwError } from 'rxjs';
-import { logout } from '../state/auth/auth.actions';
+import { logout } from '../../features/auth/state/auth.actions';
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const store = inject(Store);

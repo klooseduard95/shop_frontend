@@ -4,7 +4,7 @@ import { Actions, ROOT_EFFECTS_INIT } from '@ngrx/effects';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Action } from '@ngrx/store';
 import { firstValueFrom, of, ReplaySubject, throwError } from 'rxjs';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../services/auth.service';
 import {
   authInitialized,
   login,

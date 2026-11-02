@@ -3,7 +3,7 @@ import { provideRouter } from '@angular/router';
 import { App } from './app';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { Store } from '@ngrx/store';
-import { logout } from './core/state/auth/auth.actions';
+import { logout } from './features/auth/state/auth.actions';
 import { UserProfile } from './features/shared/types/users.types';
 
 describe('App', () => {

@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { LoginRequest, UserProfile } from '../../../features/shared/types/users.types';
+import { LoginRequest, UserProfile } from '../../shared/types/users.types';
 
 export const login = createAction('[Auth Page] Login', props<{ credentials: LoginRequest }>());
 export const restoreSession = createAction('[Auth] Restore Session', props<{ token: string }>());

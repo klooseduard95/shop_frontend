@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Login } from './login';
 import { provideMockStore } from '@ngrx/store/testing';
 import { Store } from '@ngrx/store';
-import { login } from '../../../../../core/state/auth/auth.actions';
+import { login } from '../../../state/auth.actions';
 import { By } from '@angular/platform-browser';
 import { LoginView } from '../../presentational/login-view/login-view';
 

@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { LoginView } from '../../presentational/login-view/login-view';
 import { Store } from '@ngrx/store';
-import { login } from '../../../../../core/state/auth/auth.actions';
-import { selectAuthError, selectAuthLoading } from '../../../../../core/state/auth/auth.reducer';
+import { login } from '../../../state/auth.actions';
+import { selectAuthError, selectAuthLoading } from '../../../state/auth.reducer';
 
 @Component({
   selector: 'app-login',
