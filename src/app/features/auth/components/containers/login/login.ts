@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { LoginView } from '../../presentational/login-view/login-view';
 import { Store } from '@ngrx/store';
 import { login } from '../../../state/auth.actions';
-import { selectAuthError, selectAuthLoading } from '../../../state/auth.reducer';
+import { selectAuthError, selectAuthLoading } from '../../../state/auth.selectors';
 
 @Component({
   selector: 'app-login',

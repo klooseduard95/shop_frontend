@@ -15,7 +15,9 @@ describe('authInterceptor', () => {
         provideMockStore({
           initialState: {
             auth: {
-              user: null,
+              ids: [],
+              entities: {},
+              currentUserId: null,
               token: null,
               initialized: true,
               loading: false,
@@ -38,7 +40,9 @@ describe('authInterceptor', () => {
   it('should add the store token as a bearer header', () => {
     store.setState({
       auth: {
-        user: null,
+        ids: [],
+        entities: {},
+        currentUserId: null,
         token: 'token',
         initialized: true,
         loading: false,
@@ -64,7 +68,9 @@ describe('authInterceptor', () => {
   it('should preserve an explicitly supplied authorization header', () => {
     store.setState({
       auth: {
-        user: null,
+        ids: [],
+        entities: {},
+        currentUserId: null,
         token: 'store-token',
         initialized: true,
         loading: false,

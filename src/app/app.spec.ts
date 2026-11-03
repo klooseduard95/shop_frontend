@@ -17,7 +17,9 @@ describe('App', () => {
         provideMockStore({
           initialState: {
             auth: {
-              user: null,
+              ids: [],
+              entities: {},
+              currentUserId: null,
               token: null,
               initialized: true,
               loading: false,
@@ -53,7 +55,15 @@ describe('App', () => {
   it('should render authenticated admin navigation and dispatch logout', () => {
     const user: UserProfile = { id: 'admin-1', username: 'admin', role: 'ADMIN' };
     store.setState({
-      auth: { user, token: 'token', initialized: true, loading: false, error: null },
+      auth: {
+        ids: [user.id],
+        entities: { [user.id]: user },
+        currentUserId: user.id,
+        token: 'token',
+        initialized: true,
+        loading: false,
+        error: null,
+      },
     });
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();

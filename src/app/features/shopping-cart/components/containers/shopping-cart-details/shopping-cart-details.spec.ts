@@ -7,7 +7,7 @@ import {
   selectCartError,
   selectCartItemDetails,
   selectCartTotal,
-} from '../../../state/cart.reducer';
+} from '../../../state/cart.selectors';
 import { Store } from '@ngrx/store';
 import { checkout, removeFromCart } from '../../../state/cart.actions';
 import { loadProducts } from '../../../../products/state/products.actions';

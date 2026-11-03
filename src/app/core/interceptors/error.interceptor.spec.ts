@@ -17,11 +17,15 @@ describe('errorInterceptor', () => {
         provideMockStore({
           initialState: {
             auth: {
-              user: {
-                id: 'customer-1',
-                username: 'customer',
-                role: 'CUSTOMER',
+              ids: ['customer-1'],
+              entities: {
+                'customer-1': {
+                  id: 'customer-1',
+                  username: 'customer',
+                  role: 'CUSTOMER',
+                },
               },
+              currentUserId: 'customer-1',
               token: 'token',
               initialized: true,
               loading: false,

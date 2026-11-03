@@ -11,22 +11,28 @@ describe('application routes', () => {
 
   const stateFor = (user: { id: string; username: string; role: 'ADMIN' | 'CUSTOMER' } | null) => ({
     auth: {
-      user,
+      ids: user ? [user.id] : [],
+      entities: user ? { [user.id]: user } : {},
+      currentUserId: user?.id ?? null,
       token: user ? 'token' : null,
       initialized: true,
       loading: false,
       error: null,
     },
     products: {
-      items: [],
-      selectedProduct: null,
+      ids: [],
+      entities: {},
+      selectedProductId: null,
       loading: false,
       error: null,
       saving: false,
       saveError: null,
     },
     cart: {
-      items: [],
+      ids: [],
+      entities: {},
+      ownerKey: null,
+      revision: 0,
       loading: false,
       error: null,
     },

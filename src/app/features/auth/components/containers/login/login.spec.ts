@@ -18,7 +18,9 @@ describe('Login', () => {
         provideMockStore({
           initialState: {
             auth: {
-              user: null,
+              ids: [],
+              entities: {},
+              currentUserId: null,
               token: null,
               initialized: true,
               loading: false,

@@ -9,18 +9,22 @@ import {
   restoreSessionSuccess,
   sessionClearedInAnotherTab,
 } from './auth.actions';
+import { authReducer, AuthState, initialAuthState, usersAdapter } from './auth.reducer';
 import {
-  authReducer,
-  AuthState,
+  selectAllUsers,
   selectAuthError,
+  selectAuthGuardData,
   selectAuthInitialized,
   selectAuthLoading,
   selectAuthToken,
   selectCurrentUser,
+  selectCurrentUserId,
   selectIsAdmin,
   selectIsAuthenticated,
   selectIsCustomer,
-} from './auth.reducer';
+  selectUserEntities,
+  selectUserIds,
+} from './auth.selectors';
 
 describe('authReducer', () => {
   const user = { id: '1', username: 'user', role: 'CUSTOMER' as const };
@@ -29,7 +33,9 @@ describe('authReducer', () => {
     const state = authReducer(undefined, authInitialized());
 
     expect(state).toEqual({
-      user: null,
+      ids: [],
+      entities: {},
+      currentUserId: null,
       token: null,
       initialized: true,
       loading: false,
@@ -43,7 +49,9 @@ describe('authReducer', () => {
 
     expect(restoring).toMatchObject({ token: 'token', initialized: false, loading: true });
     expect(restored).toMatchObject({
-      user,
+      ids: [user.id],
+      entities: { [user.id]: user },
+      currentUserId: user.id,
       token: 'token',
       initialized: true,
       loading: false,
@@ -56,7 +64,9 @@ describe('authReducer', () => {
     const failed = authReducer(restoring, restoreSessionFailure({ error: 'Unauthorized' }));
 
     expect(failed).toEqual({
-      user: null,
+      ids: [],
+      entities: {},
+      currentUserId: null,
       token: null,
       initialized: true,
       loading: false,
@@ -72,9 +82,17 @@ describe('authReducer', () => {
 
     expect(loading.loading).toBe(true);
     expect(failed).toMatchObject({ loading: false, error: 'Invalid credentials' });
-    expect(loggedIn).toMatchObject({ user, token: 'token', error: null });
+    expect(loggedIn).toMatchObject({
+      ids: [user.id],
+      entities: { [user.id]: user },
+      currentUserId: user.id,
+      token: 'token',
+      error: null,
+    });
     expect(loggedOut).toEqual({
-      user: null,
+      ids: [],
+      entities: {},
+      currentUserId: null,
       token: null,
       initialized: true,
       loading: false,
@@ -83,24 +101,8 @@ describe('authReducer', () => {
   });
 
   it('should derive authentication and role flags', () => {
-    expect(
-      selectIsAuthenticated.projector({
-        user,
-        token: 'token',
-        initialized: true,
-        loading: false,
-        error: null,
-      }),
-    ).toBe(true);
-    expect(
-      selectIsAuthenticated.projector({
-        user: null,
-        token: 'token',
-        initialized: false,
-        loading: true,
-        error: null,
-      }),
-    ).toBe(false);
+    expect(selectIsAuthenticated.projector(user, 'token', true)).toBe(true);
+    expect(selectIsAuthenticated.projector(null, 'token', false)).toBe(false);
     expect(selectIsAdmin.projector({ ...user, role: 'ADMIN' })).toBe(true);
     expect(selectIsCustomer.projector(user)).toBe(true);
   });
@@ -122,7 +124,9 @@ describe('authReducer', () => {
     );
 
     expect(cleared).toEqual({
-      user: null,
+      ids: [],
+      entities: {},
+      currentUserId: null,
       token: null,
       initialized: true,
       loading: false,
@@ -132,7 +136,9 @@ describe('authReducer', () => {
 
   it('should return the initial state for an unknown action', () => {
     expect(authReducer(undefined, { type: 'Unknown action' })).toEqual({
-      user: null,
+      ids: [],
+      entities: {},
+      currentUserId: null,
       token: null,
       initialized: false,
       loading: false,
@@ -141,15 +147,16 @@ describe('authReducer', () => {
   });
 
   it('should project every auth state property', () => {
-    const state: AuthState = {
-      user,
+    const state: AuthState = usersAdapter.setOne(user, {
+      ...initialAuthState,
+      currentUserId: user.id,
       token: 'token',
       initialized: true,
       loading: true,
       error: 'Auth error',
-    };
+    });
 
-    expect(selectCurrentUser.projector(state)).toEqual(user);
+    expect(selectCurrentUser.projector(state.entities, state.currentUserId)).toEqual(user);
     expect(selectAuthToken.projector(state)).toBe('token');
     expect(selectAuthInitialized.projector(state)).toBe(true);
     expect(selectAuthLoading.projector(state)).toBe(true);
@@ -166,5 +173,28 @@ describe('authReducer', () => {
         role: 'ADMIN',
       }),
     ).toBe(false);
+  });
+
+  it('should project normalized user entities and missing current users', () => {
+    const state: AuthState = usersAdapter.setOne(user, {
+      ...initialAuthState,
+      currentUserId: user.id,
+      token: 'token',
+      initialized: true,
+    });
+
+    expect(selectUserIds.projector(state)).toEqual([user.id]);
+    expect(selectUserEntities.projector(state)).toEqual({
+      [user.id]: user,
+    });
+    expect(selectAllUsers.projector(state)).toEqual([user]);
+    expect(selectCurrentUserId.projector(state)).toBe(user.id);
+    expect(selectAuthGuardData.projector(true, user)).toEqual({
+      initialized: true,
+      user,
+    });
+
+    expect(selectCurrentUser.projector(state.entities, null)).toBeNull();
+    expect(selectCurrentUser.projector(state.entities, 'missing-user')).toBeNull();
   });
 });

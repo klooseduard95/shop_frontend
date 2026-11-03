@@ -10,15 +10,18 @@ import {
   removeFromCart,
 } from './cart.actions';
 import {
-  cartReducer,
-  CartState,
   selectCartError,
+  selectCartItemCount,
   selectCartItemDetails,
+  selectCartItemEntities,
+  selectCartItemIds,
   selectCartItems,
+  selectCartLoading,
   selectCartOwnerKey,
   selectCartRevision,
   selectCartTotal,
-} from './cart.reducer';
+} from './cart.selectors';
+import { cartAdapter, cartReducer, CartState, initialCartState } from './cart.reducer';
 
 describe('cartReducer', () => {
   const product = createMockProduct({ price: 10 });
@@ -37,7 +40,8 @@ describe('cartReducer', () => {
 
   it('should return the initial state for an unknown action', () => {
     expect(cartReducer(undefined, { type: 'Unknown' })).toEqual({
-      items: [],
+      ids: [],
+      entities: {},
       ownerKey: null,
       revision: 0,
       loading: false,
@@ -48,12 +52,11 @@ describe('cartReducer', () => {
   it('should add a new product', () => {
     const state = cartReducer(undefined, addToCart({ productId: product.id }));
 
-    expect(state.items).toEqual([
-      {
-        productId: product.id,
-        quantity: 1,
-      },
-    ]);
+    expect(state.ids).toEqual([product.id]);
+    expect(state.entities[product.id]).toEqual({
+      productId: product.id,
+      quantity: 1,
+    });
   });
 
   it('should increment an existing product without changing others', () => {
@@ -63,16 +66,11 @@ describe('cartReducer', () => {
 
     state = cartReducer(state, addToCart({ productId: product.id }));
 
-    expect(state.items).toEqual([
-      {
-        productId: product.id,
-        quantity: 2,
-      },
-      {
-        productId: otherProduct.id,
-        quantity: 1,
-      },
-    ]);
+    expect(state.ids).toEqual([product.id, otherProduct.id]);
+    expect(state.entities).toEqual({
+      [product.id]: { productId: product.id, quantity: 2 },
+      [otherProduct.id]: { productId: otherProduct.id, quantity: 1 },
+    });
   });
 
   it('should remove only the requested product', () => {
@@ -82,12 +80,10 @@ describe('cartReducer', () => {
 
     state = cartReducer(state, removeFromCart({ productId: product.id }));
 
-    expect(state.items).toEqual([
-      {
-        productId: otherProduct.id,
-        quantity: 1,
-      },
-    ]);
+    expect(state.ids).toEqual([otherProduct.id]);
+    expect(state.entities).toEqual({
+      [otherProduct.id]: { productId: otherProduct.id, quantity: 1 },
+    });
   });
 
   it('should track checkout progress, failure, and success', () => {
@@ -114,11 +110,9 @@ describe('cartReducer', () => {
       error: 'Checkout failed',
     });
 
-    expect(completed).toMatchObject({
-      items: [],
-      loading: false,
-      error: null,
-    });
+    expect(completed.ids).toEqual([]);
+    expect(completed.entities).toEqual({});
+    expect(completed).toMatchObject({ loading: false, error: null });
   });
 
   it('should reset loading and errors when the owner changes', () => {
@@ -146,12 +140,10 @@ describe('cartReducer', () => {
     );
 
     expect(hydrated).toEqual({
-      items: [
-        {
-          productId: product.id,
-          quantity: 2,
-        },
-      ],
+      ids: [product.id],
+      entities: {
+        [product.id]: { productId: product.id, quantity: 2 },
+      },
       ownerKey: 'cart:user:user-1',
       revision: 3,
       loading: false,
@@ -161,7 +153,8 @@ describe('cartReducer', () => {
 
   it('should preserve loading and errors when hydrating the same owner', () => {
     const state: CartState = {
-      items: [],
+      ids: [],
+      entities: {},
       ownerKey: 'cart:user:user-1',
       revision: 1,
       loading: true,
@@ -211,10 +204,9 @@ describe('cartReducer', () => {
       }),
     );
 
-    expect(state).toMatchObject({
-      items,
-      revision: 7,
-    });
+    expect(state.ids).toEqual([product.id]);
+    expect(state.entities).toEqual({ [product.id]: items[0] });
+    expect(state.revision).toBe(7);
   });
 
   it('should join cart items with available products', () => {
@@ -229,7 +221,7 @@ describe('cartReducer', () => {
           quantity: 1,
         },
       ],
-      [product],
+      { [product.id]: product },
     );
 
     expect(details).toEqual([
@@ -253,29 +245,56 @@ describe('cartReducer', () => {
           quantity: 2,
         },
       ],
-      [product, otherProduct],
+      {
+        [product.id]: product,
+        [otherProduct.id]: otherProduct,
+      },
     );
 
     expect(selectCartTotal.projector(details)).toBe(70);
   });
 
   it('should project cart state values', () => {
-    const state: CartState = {
-      items: [
-        {
-          productId: product.id,
-          quantity: 2,
-        },
-      ],
+    const cartItems = [
+      {
+        productId: product.id,
+        quantity: 2,
+      },
+    ];
+    const state: CartState = cartAdapter.setAll(cartItems, {
+      ...initialCartState,
       ownerKey: 'cart:user:user-1',
       revision: 5,
-      loading: false,
       error: 'Cart error',
-    };
+    });
 
-    expect(selectCartItems.projector(state)).toEqual(state.items);
+    expect(selectCartItems.projector(state)).toEqual(cartItems);
     expect(selectCartError.projector(state)).toBe('Cart error');
     expect(selectCartOwnerKey.projector(state)).toBe('cart:user:user-1');
     expect(selectCartRevision.projector(state)).toBe(5);
+  });
+
+  it('should project normalized cart entity metadata', () => {
+    const cartItems = [
+      {
+        productId: product.id,
+        quantity: 2,
+      },
+    ];
+
+    const state: CartState = cartAdapter.setAll(cartItems, {
+      ...initialCartState,
+      ownerKey: 'cart:user:user-1',
+      revision: 5,
+      loading: true,
+      error: 'Cart error',
+    });
+
+    expect(selectCartItemIds.projector(state)).toEqual([product.id]);
+    expect(selectCartItemEntities.projector(state)).toEqual({
+      [product.id]: cartItems[0],
+    });
+    expect(selectCartItemCount.projector(state)).toBe(1);
+    expect(selectCartLoading.projector(state)).toBe(true);
   });
 });

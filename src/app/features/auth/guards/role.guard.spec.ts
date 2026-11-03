@@ -25,7 +25,9 @@ describe('roleGuard', () => {
         provideMockStore({
           initialState: {
             auth: {
-              user: null,
+              ids: [],
+              entities: {},
+              currentUserId: null,
               token: null,
               initialized: true,
               loading: false,
@@ -55,11 +57,15 @@ describe('roleGuard', () => {
   it('should allow a user with the expected role', async () => {
     store.setState({
       auth: {
-        user: {
-          id: 'admin-1',
-          username: 'admin',
-          role: 'ADMIN',
+        ids: ['admin-1'],
+        entities: {
+          'admin-1': {
+            id: 'admin-1',
+            username: 'admin',
+            role: 'ADMIN',
+          },
         },
+        currentUserId: 'admin-1',
         token: 'token',
         initialized: true,
         loading: false,
@@ -73,11 +79,15 @@ describe('roleGuard', () => {
   it('should redirect a user with a different role to products', async () => {
     store.setState({
       auth: {
-        user: {
-          id: 'customer-1',
-          username: 'customer',
-          role: 'CUSTOMER',
+        ids: ['customer-1'],
+        entities: {
+          'customer-1': {
+            id: 'customer-1',
+            username: 'customer',
+            role: 'CUSTOMER',
+          },
         },
+        currentUserId: 'customer-1',
         token: 'token',
         initialized: true,
         loading: false,
@@ -93,7 +103,9 @@ describe('roleGuard', () => {
   it('should wait until authentication is initialized', async () => {
     store.setState({
       auth: {
-        user: null,
+        ids: [],
+        entities: {},
+        currentUserId: null,
         token: null,
         initialized: false,
         loading: false,
@@ -105,11 +117,15 @@ describe('roleGuard', () => {
 
     store.setState({
       auth: {
-        user: {
-          id: 'customer-1',
-          username: 'customer',
-          role: 'CUSTOMER',
+        ids: ['customer-1'],
+        entities: {
+          'customer-1': {
+            id: 'customer-1',
+            username: 'customer',
+            role: 'CUSTOMER',
+          },
         },
+        currentUserId: 'customer-1',
         token: 'token',
         initialized: true,
         loading: false,
