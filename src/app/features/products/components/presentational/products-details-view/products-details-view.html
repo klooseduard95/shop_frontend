@@ -1,0 +1,43 @@
+@if (product(); as selectedProduct) {
+  <article class="detail-card">
+    <div class="image-wrapper">
+      <img [src]="selectedProduct.imageUrl" [alt]="selectedProduct.name">
+    </div>
+
+    <div class="content-wrapper">
+      <header class="detail-header">
+        <span class="detail-category">{{ selectedProduct.categoryName }}</span>
+        <h2 class="product-title">{{ selectedProduct.name }}</h2>
+        <div class="price-tag">{{ selectedProduct.price }} EUR</div>
+      </header>
+
+      <div class="description-section">
+        <h3>Description</h3>
+        <p>{{ selectedProduct.categoryDescription }}</p>
+      </div>
+
+      <div class="actions">
+        <button mat-flat-button color="accent" (click)="addToCart.emit(product()!)">
+          <mat-icon>add_shopping_cart</mat-icon>
+          Add to Cart
+        </button>
+
+        @if (isAdmin()) {
+          <button mat-stroked-button color="primary" [routerLink]="['/products', product()!.id, 'edit']">
+            <mat-icon>edit</mat-icon>
+            Edit
+          </button>
+          <button mat-flat-button color="warn" (click)="deleteProduct.emit(product()!.id)">
+            <mat-icon>delete_forever</mat-icon>
+            Delete
+          </button>
+        }
+      </div>
+    </div>
+  </article>
+} @else {
+  <div class="placeholder-state">
+    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="m2 2 20 20"/><path d="M7.12 7.12 3 11l9 9 7.88-7.88"/><path d="M10.5 10.5 14 14"/><path d="m16 8 3-3"/><path d="m9 15-3 3"/></svg>
+    <p>Select a product from the list to view details.</p>
+  </div>
+}

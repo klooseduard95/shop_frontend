@@ -1,0 +1,31 @@
+<div class="list-container">
+  <div class="list-header">
+    <span class="col-category">Category</span>
+    <span class="col-name">Product Name</span>
+    <span class="col-price">Price</span>
+    <span class="col-action"></span>
+  </div>
+
+  @for (product of products(); track product.id) {
+    <div class="list-row">
+      <span class="col-category">
+        <span class="badge">{{ product.categoryName }}</span>
+      </span>
+      <span class="col-name fw-medium">{{ product.name }}</span>
+      <span class="col-price">{{ product.price }} EUR</span>
+      <span class="col-action">
+        <button mat-stroked-button [routerLink]="['/products', product.id]">
+          View
+        </button>
+
+              @if (isAdmin()) {
+                <button mat-button color="warn" (click)="deleteProduct.emit(product.id)">
+            Delete
+          </button>
+              }
+      </span>
+    </div>
+  } @empty {
+    <div class="empty-state">No products found.</div>
+  }
+</div>

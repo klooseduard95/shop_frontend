@@ -1,0 +1,9 @@
+@if (loading()) {
+  <p>Loading products...</p>
+}
+<app-products-list-view
+  [products]="products()"
+  [isAdmin]="isAdmin()"
+  (deleteProduct)="handleDelete($event)"
+>
+</app-products-list-view>
