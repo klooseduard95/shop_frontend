@@ -18,14 +18,24 @@ import {
   updateProductSuccess,
 } from './products.actions';
 import {
+  initialProductsState,
+  productsAdapter,
   productsReducer,
   ProductsState,
+} from './products.reducer';
+import {
   selectAllProducts,
+  selectProductById,
+  selectProductEntities,
+  selectProductIds,
   selectProductSaveError,
   selectProductSaving,
+  selectProductsError,
   selectProductsLoading,
+  selectProductsTotal,
   selectSelectedProduct,
-} from './products.reducer';
+  selectSelectedProductId,
+} from './products.selectors';
 
 describe('productsReducer', () => {
   const product = createMockProduct();
@@ -46,8 +56,9 @@ describe('productsReducer', () => {
 
   it('should return the initial state for an unknown action', () => {
     expect(productsReducer(undefined, { type: 'Unknown' })).toEqual({
-      items: [],
-      selectedProduct: null,
+      ids: [],
+      entities: {},
+      selectedProductId: null,
       loading: false,
       error: null,
       saving: false,
@@ -70,10 +81,12 @@ describe('productsReducer', () => {
       error: null,
     });
 
-    expect(loaded).toMatchObject({
-      items: [product, otherProduct],
-      loading: false,
+    expect(loaded.ids).toEqual([product.id, otherProduct.id]);
+    expect(loaded.entities).toEqual({
+      [product.id]: product,
+      [otherProduct.id]: otherProduct,
     });
+    expect(loaded.loading).toBe(false);
   });
 
   it('should expose product list loading errors', () => {
@@ -98,7 +111,7 @@ describe('productsReducer', () => {
     const loading = productsReducer(selected, loadProduct({ id: otherProduct.id }));
 
     expect(loading).toMatchObject({
-      selectedProduct: null,
+      selectedProductId: null,
       loading: true,
       error: null,
     });
@@ -108,9 +121,10 @@ describe('productsReducer', () => {
     const loaded = productsReducer(undefined, loadProductSuccess({ product }));
 
     expect(loaded).toMatchObject({
-      selectedProduct: product,
+      selectedProductId: product.id,
       loading: false,
     });
+    expect(loaded.entities[product.id]).toEqual(product);
   });
 
   it('should expose product detail loading errors', () => {
@@ -148,11 +162,10 @@ describe('productsReducer', () => {
 
     const deleted = productsReducer(state, deleteProductSuccess({ id: product.id }));
 
-    expect(deleted).toMatchObject({
-      items: [otherProduct],
-      selectedProduct: null,
-      loading: false,
-    });
+    expect(deleted.ids).toEqual([otherProduct.id]);
+    expect(deleted.entities).toEqual({ [otherProduct.id]: otherProduct });
+    expect(deleted.selectedProductId).toBeNull();
+    expect(deleted.loading).toBe(false);
   });
 
   it('should preserve another selected product after deletion', () => {
@@ -172,7 +185,8 @@ describe('productsReducer', () => {
 
     const deleted = productsReducer(state, deleteProductSuccess({ id: product.id }));
 
-    expect(deleted.selectedProduct).toEqual(otherProduct);
+    expect(deleted.selectedProductId).toBe(otherProduct.id);
+    expect(deleted.entities[otherProduct.id]).toEqual(otherProduct);
   });
 
   it('should expose delete errors', () => {
@@ -209,14 +223,12 @@ describe('productsReducer', () => {
 
     const duplicate = productsReducer(created, createProductSuccess({ product }));
 
-    expect(created).toMatchObject({
-      items: [product],
-      selectedProduct: product,
-      saving: false,
-      saveError: null,
-    });
-
-    expect(duplicate.items).toEqual([product]);
+    expect(created.ids).toEqual([product.id]);
+    expect(created.entities[product.id]).toEqual(product);
+    expect(created.selectedProductId).toBe(product.id);
+    expect(created.saving).toBe(false);
+    expect(created.saveError).toBeNull();
+    expect(duplicate.ids).toEqual([product.id]);
   });
 
   it('should update a cached and selected product', () => {
@@ -236,8 +248,9 @@ describe('productsReducer', () => {
       }),
     );
 
-    expect(updated.items).toEqual([updatedProduct, otherProduct]);
-    expect(updated.selectedProduct).toEqual(updatedProduct);
+    expect(updated.ids).toEqual([updatedProduct.id, otherProduct.id]);
+    expect(updated.entities[updatedProduct.id]).toEqual(updatedProduct);
+    expect(updated.selectedProductId).toBe(updatedProduct.id);
     expect(updated.saving).toBe(false);
   });
 
@@ -263,7 +276,8 @@ describe('productsReducer', () => {
       }),
     );
 
-    expect(updated.selectedProduct).toEqual(otherProduct);
+    expect(updated.selectedProductId).toBe(otherProduct.id);
+    expect(updated.entities[otherProduct.id]).toEqual(otherProduct);
   });
 
   it.each([
@@ -295,19 +309,43 @@ describe('productsReducer', () => {
   });
 
   it('should project product state values', () => {
-    const state: ProductsState = {
-      items: [product],
-      selectedProduct: product,
+    const state: ProductsState = productsAdapter.setOne(product, {
+      ...initialProductsState,
+      selectedProductId: product.id,
       loading: true,
-      error: null,
       saving: true,
       saveError: 'Save failed',
-    };
+    });
 
     expect(selectAllProducts.projector(state)).toEqual([product]);
-    expect(selectSelectedProduct.projector(state)).toEqual(product);
+    expect(selectSelectedProduct.projector(state.entities, state.selectedProductId)).toEqual(
+      product,
+    );
     expect(selectProductsLoading.projector(state)).toBe(true);
     expect(selectProductSaving.projector(state)).toBe(true);
     expect(selectProductSaveError.projector(state)).toBe('Save failed');
+  });
+
+  it('should project normalized product entities and product lookup fallbacks', () => {
+    const state: ProductsState = productsAdapter.setAll([product, otherProduct], {
+      ...initialProductsState,
+      selectedProductId: product.id,
+      error: 'Products unavailable',
+    });
+
+    expect(selectProductIds.projector(state)).toEqual([product.id, otherProduct.id]);
+    expect(selectProductEntities.projector(state)).toEqual({
+      [product.id]: product,
+      [otherProduct.id]: otherProduct,
+    });
+    expect(selectProductsTotal.projector(state)).toBe(2);
+    expect(selectSelectedProductId.projector(state)).toBe(product.id);
+    expect(selectProductsError.projector(state)).toBe('Products unavailable');
+
+    expect(selectSelectedProduct.projector(state.entities, null)).toBeNull();
+    expect(selectSelectedProduct.projector(state.entities, 'missing-product')).toBeNull();
+
+    expect(selectProductById(product.id).projector(state.entities)).toEqual(product);
+    expect(selectProductById('missing-product').projector(state.entities)).toBeNull();
   });
 });

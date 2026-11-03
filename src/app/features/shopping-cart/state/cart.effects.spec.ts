@@ -81,14 +81,17 @@ describe('CartEffects', () => {
     revision?: number;
   } = {}) => ({
     auth: {
-      user: currentUser,
+      ids: currentUser ? [currentUser.id] : [],
+      entities: currentUser ? { [currentUser.id]: currentUser } : {},
+      currentUserId: currentUser?.id ?? null,
       token: currentUser ? 'token' : null,
       initialized: true,
       loading: false,
       error: null,
     },
     cart: {
-      items,
+      ids: items.map((item) => item.productId),
+      entities: Object.fromEntries(items.map((item) => [item.productId, item])),
       ownerKey,
       revision,
       loading: false,

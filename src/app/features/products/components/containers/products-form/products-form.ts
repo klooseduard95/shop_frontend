@@ -23,7 +23,7 @@ import {
   selectProductSaveError,
   selectProductSaving,
   selectSelectedProduct,
-} from '../../../state/products.reducer';
+} from '../../../state/products.selectors';
 
 @Component({
   selector: 'app-products-form',

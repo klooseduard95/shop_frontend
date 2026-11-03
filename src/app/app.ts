@@ -7,7 +7,7 @@ import {
   selectCurrentUser,
   selectIsAdmin,
   selectIsAuthenticated,
-} from './features/auth/state/auth.reducer';
+} from './features/auth/state/auth.selectors';
 
 @Component({
   selector: 'app-root',

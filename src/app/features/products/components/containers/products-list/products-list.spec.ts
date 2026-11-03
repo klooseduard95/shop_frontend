@@ -4,7 +4,7 @@ import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { Store } from '@ngrx/store';
 import { deleteProduct, loadProducts } from '../../../state/products.actions';
 import { createMockProduct } from '../../../../../mocks/products.mock';
-import { selectProductsLoading } from '../../../state/products.reducer';
+import { selectProductsLoading } from '../../../state/products.selectors';
 import { By } from '@angular/platform-browser';
 import { ProductsListView } from '../../presentational/products-list-view/products-list-view';
 
@@ -19,9 +19,19 @@ describe('ProductsList', () => {
       providers: [
         provideMockStore({
           initialState: {
-            products: { items: [], selectedProduct: null, loading: false, error: null },
+            products: {
+              ids: [],
+              entities: {},
+              selectedProductId: null,
+              loading: false,
+              error: null,
+              saving: false,
+              saveError: null,
+            },
             auth: {
-              user: null,
+              ids: [],
+              entities: {},
+              currentUserId: null,
               token: null,
               initialized: true,
               loading: false,

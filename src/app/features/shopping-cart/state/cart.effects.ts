@@ -10,11 +10,11 @@ import {
   restoreSessionSuccess,
   sessionClearedInAnotherTab,
 } from '../../auth/state/auth.actions';
-import { selectCurrentUser } from '../../auth/state/auth.reducer';
+import { selectCurrentUser } from '../../auth/state/auth.selectors';
 import { UserProfile } from '../../shared/types/users.types';
 import { CartStorageService } from '../services/cart-storage.service';
 import { CartService } from '../services/cart.service';
-import { CartStorageChange } from '../types/cart.types';
+import { CartItem, CartStorageChange } from '../types/cart.types';
 import { areCartItemsEqual, mergeCartItems } from '../utils/cart.utils';
 import {
   addToCart,
@@ -26,7 +26,8 @@ import {
   checkoutSuccess,
   removeFromCart,
 } from './cart.actions';
-import { CartState, selectCartItems, selectCartState } from './cart.reducer';
+import { CartState } from './cart.reducer';
+import { selectCartItems, selectCartState } from './cart.selectors';
 
 @Injectable({
   providedIn: 'root',
@@ -47,19 +48,23 @@ export class CartEffects {
         logout,
         sessionClearedInAnotherTab,
       ),
-      withLatestFrom(this.store.select(selectCurrentUser), this.store.select(selectCartState)),
-      map(([, user, cart]) => this.hydrateFor(user, cart)),
+      withLatestFrom(
+        this.store.select(selectCurrentUser),
+        this.store.select(selectCartState),
+        this.store.select(selectCartItems),
+      ),
+      map(([, user, cart, items]) => this.hydrateFor(user, cart, items)),
     ),
   );
 
   persistCart$ = createEffect(() =>
     this.actions$.pipe(
       ofType(addToCart, removeFromCart, checkoutSuccess),
-      withLatestFrom(this.store.select(selectCartState)),
-      filter(([, cart]) => typeof cart.ownerKey === 'string'),
-      map(([, cart]) =>
+      withLatestFrom(this.store.select(selectCartState), this.store.select(selectCartItems)),
+      filter(([, cart]) => cart.ownerKey !== null),
+      map(([, cart, items]) =>
         cartPersisted({
-          revision: this.cartStorage.write(cart.ownerKey as string, cart.items).revision,
+          revision: this.cartStorage.write(cart.ownerKey!, items).revision,
         }),
       ),
     ),
@@ -79,6 +84,7 @@ export class CartEffects {
       withLatestFrom(this.store.select(selectCartItems), this.store.select(selectCurrentUser)),
       exhaustMap(([{ deliveryAddress }, items, user]) => {
         const userId = user?.id;
+
         if (!userId || items.length === 0) {
           return of(
             checkoutFailure({
@@ -104,20 +110,25 @@ export class CartEffects {
     ),
   );
 
-  private hydrateFor(user: UserProfile | null, cart: CartState): Action {
+  private hydrateFor(user: UserProfile | null, cart: CartState, currentItems: CartItem[]): Action {
     const ownerKey = this.cartStorage.ownerKeyFor(user);
     const isGuest = ownerKey === CartStorageService.guestOwnerKey;
 
-    const pendingItems = cart.ownerKey === null ? cart.items : [];
+    const pendingItems = cart.ownerKey === null ? currentItems : [];
     const claimedGuestItems = isGuest ? [] : this.cartStorage.claimGuestCart();
 
     const stored = this.cartStorage.read(ownerKey);
     const items = mergeCartItems(stored.items, [...claimedGuestItems, ...pendingItems]);
+
     const persisted = areCartItemsEqual(items, stored.items)
       ? stored
       : this.cartStorage.write(ownerKey, items);
 
-    return cartHydrated({ ownerKey, items: persisted.items, revision: persisted.revision });
+    return cartHydrated({
+      ownerKey,
+      items: persisted.items,
+      revision: persisted.revision,
+    });
   }
 
   private resolveRemoteChange(change: CartStorageChange, cart: CartState): Action | null {
@@ -126,7 +137,10 @@ export class CartEffects {
     }
 
     if (change.ownerKey === null) {
-      return cartSyncedFromAnotherTab({ items: [], revision: 0 });
+      return cartSyncedFromAnotherTab({
+        items: [],
+        revision: 0,
+      });
     }
 
     if (change.ownerKey !== cart.ownerKey) {
@@ -134,7 +148,10 @@ export class CartEffects {
     }
 
     if (change.cart === null) {
-      return cartSyncedFromAnotherTab({ items: [], revision: 0 });
+      return cartSyncedFromAnotherTab({
+        items: [],
+        revision: 0,
+      });
     }
 
     if (

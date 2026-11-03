@@ -20,7 +20,9 @@ describe('auth guards', () => {
     initialized = true,
   ) => ({
     auth: {
-      user,
+      ids: user ? [user.id] : [],
+      entities: user ? { [user.id]: user } : {},
+      currentUserId: user?.id ?? null,
       token: user ? 'token' : null,
       initialized,
       loading: !initialized,

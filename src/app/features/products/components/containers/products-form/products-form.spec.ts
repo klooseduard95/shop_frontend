@@ -14,7 +14,7 @@ import {
   selectProductSaveError,
   selectProductSaving,
   selectSelectedProduct,
-} from '../../../state/products.reducer';
+} from '../../../state/products.selectors';
 import { ProductsFormView } from '../../presentational/products-form-view/products-form-view';
 import { ProductsForm } from './products-form';
 

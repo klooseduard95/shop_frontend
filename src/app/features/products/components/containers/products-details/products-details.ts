@@ -7,8 +7,8 @@ import { Product } from '../../../types/products.types';
 import { Store } from '@ngrx/store';
 import { deleteProduct, loadProduct } from '../../../state/products.actions';
 import { addToCart } from '../../../../shopping-cart/state/cart.actions';
-import { selectSelectedProduct } from '../../../state/products.reducer';
-import { selectIsAdmin } from '../../../../auth/state/auth.reducer';
+import { selectSelectedProduct } from '../../../state/products.selectors';
+import { selectIsAdmin } from '../../../../auth/state/auth.selectors';
 
 @Component({
   selector: 'app-products-details',
